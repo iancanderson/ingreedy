@@ -29,8 +29,16 @@ describe "english units" do
       @expected_units["1 (28 fl oz) can crushed tomatoes"] = :fluid_ounce      
       @expected_units["2 gal flour"] = :gallon
       @expected_units["2 gal. flour"] = :gallon
+      @expected_units["1 ounce flour"] = :ounce
+      @expected_units["2 ounces flour"] = :ounce
+      @expected_units["1 oz flour"] = :ounce
+      @expected_units["1 oz. flour"] = :ounce
       @expected_units["2 pt flour"] = :pint
       @expected_units["2 pt. flour"] = :pint
+      @expected_units["1 lb flour"] = :pound
+      @expected_units["1 lb. flour"] = :pound
+      @expected_units["1 pound flour"] = :pound
+      @expected_units["2 pounds flour"] = :pound
       @expected_units["2 qt flour"] = :quart
       @expected_units["2 qt. flour"] = :quart
       @expected_units["2 qts flour"] = :quart
