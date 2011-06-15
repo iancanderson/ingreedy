@@ -8,6 +8,8 @@ describe "amount formats" do
     @expected_amounts["1.0 cup flour"] = 1.0
     @expected_amounts["1.5 cups flour"] = 1.5
     @expected_amounts["1 2/3 cups flour"] = 1 + 2/3.to_f
+    @expected_amounts["1 (28 ounce) can crushed tomatoes"] = 28
+    @expected_amounts["2 (28 ounce) can crushed tomatoes"] = 56
   end
   it "should parse the correct amount as a float" do
     @expected_amounts.each do |query, expected|
@@ -24,6 +26,7 @@ describe "english units" do
       @expected_units["1 c. flour"] = :cup
       @expected_units["1 fl oz flour"] = :fluid_ounce
       @expected_units["1 fl. oz. flour"] = :fluid_ounce
+      @expected_units["1 (28 fl oz) can crushed tomatoes"] = :fluid_ounce      
       @expected_units["2 gal flour"] = :gallon
       @expected_units["2 gal. flour"] = :gallon
       @expected_units["2 pt flour"] = :pint

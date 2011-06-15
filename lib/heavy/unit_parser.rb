@@ -1,36 +1,35 @@
 class UnitParser
 
+  attr_reader :amount, :unit, :ingredient
+
   def initialize(query)
     @query = query
   end
+
   def parse
     heavy_regex = %r{
       (?<amount> \d+(\.\d+)? ) {0}
       (?<fraction> \d\/\d ) {0}
+
+      (?<container_amount> \d+(\.\d+)?) {0}
+      (?<container_unit> .+) {0}
+      (?<container_size> \(\g<container_amount>\s\g<container_unit>\)) {0}
       (?<unit_and_ingredient> .+ ) {0}
 
-      (\g<amount>\s)?(\g<fraction>\s)?\g<unit_and_ingredient>
+      (\g<amount>\s)?(\g<fraction>\s)?(\g<container_size>\s)?\g<unit_and_ingredient>
     }x
     results = heavy_regex.match(@query)
 
     @ingredient_string = results[:unit_and_ingredient]
+    @container_amount = results[:container_amount]
+    @container_unit = results[:container_unit]
 
     parse_amount results[:amount], results[:fraction]
     parse_unit_and_ingredient
-    # if no valid unit was given, prepend it to the ingredient
-#    @ingredient = @unit ? results[:ingredient] : "#{results[:unit]} #{results[:ingredient]}"
-  end
-  def amount
-    @amount
-  end
-  def unit
-    @unit
-  end
-  def ingredient
-    @ingredient
   end
 
   private
+
   def parse_amount(amount_string, fraction_string)
     fraction = 0
     if fraction_string
@@ -40,6 +39,7 @@ class UnitParser
       fraction = numerator / denominator
     end
     @amount = amount_string.to_f + fraction
+    @amount *= @container_amount.to_f if @container_amount
   end
   def set_unit_variations(unit, variations)
     variations.each do |abbrev|
@@ -71,6 +71,13 @@ class UnitParser
         # if a unit is found, remove it from the ingredient string
         @ingredient_string.sub! abbrev, ""
         @unit = unit
+      end
+    end
+
+    # if we still don't have a unit, check to see if we have a container unit
+    if @unit.nil? and @container_unit
+      @unit_map.each do |abbrev, unit|
+        @unit = unit if abbrev == @container_unit
       end
     end
   end
