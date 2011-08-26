@@ -3,7 +3,7 @@ class UnitParser
   attr_reader :amount, :unit, :ingredient
 
   def initialize(query)
-    @query = query
+    @query = query.downcase
   end
 
   def parse
@@ -85,6 +85,7 @@ class UnitParser
   end
   def parse_unit_and_ingredient
     parse_unit
-    @ingredient = @ingredient_string
+    # clean up ingredient string
+    @ingredient = @ingredient_string.lstrip.rstrip
   end
 end

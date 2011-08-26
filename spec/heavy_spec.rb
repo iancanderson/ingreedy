@@ -144,3 +144,9 @@ describe "without units" do
     @heavy.ingredient.should == "eggs, lightly beaten"
   end
 end
+
+describe "ingredient formatting" do
+  it "should not have any preceding or trailing whitespace" do
+    Heavy.parse("1 cup flour ").ingredient.should == "flour"
+  end
+end
