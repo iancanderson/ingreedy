@@ -1,6 +1,8 @@
+require 'ingreedy/version'
+
 Gem::Specification.new do |s|
  s.name        = "ingreedy"
- s.version     = '0.0.0'
+ s.version     = Ingreedy::VERSION
  s.authors     = ["Ian C. Anderson"]
  s.email       = ["anderson.ian.c@gmail.com"]
 
