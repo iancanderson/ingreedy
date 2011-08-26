@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + "/../lib/heavy")
+require File.expand_path(File.dirname(__FILE__) + "/../lib/ingreedy")
 
 describe "amount formats" do
   before(:all) do
@@ -13,7 +13,7 @@ describe "amount formats" do
   end
   it "should parse the correct amount as a float" do
     @expected_amounts.each do |query, expected|
-      Heavy.parse(query).amount.should == expected
+      Ingreedy.parse(query).amount.should == expected
     end
   end
 end
@@ -54,7 +54,7 @@ describe "english units" do
     end
     it "should parse the units correctly" do
       @expected_units.each do |query, expected|
-        Heavy.parse(query).unit.should == expected
+        Ingreedy.parse(query).unit.should == expected
       end
     end
   end
@@ -78,7 +78,7 @@ describe "english units" do
     end
     it "should parse the units correctly" do
       @expected_units.each do |query, expected|
-        Heavy.parse(query).unit.should == expected
+        Ingreedy.parse(query).unit.should == expected
       end
     end
   end
@@ -103,7 +103,7 @@ describe "metric units" do
     end
     it "should parse the units correctly" do
       @expected_units.each do |query, expected|
-        Heavy.parse(query).unit.should == expected
+        Ingreedy.parse(query).unit.should == expected
       end
     end
   end
@@ -123,30 +123,30 @@ describe "metric units" do
     end
     it "should parse the units correctly" do
       @expected_units.each do |query, expected|
-        Heavy.parse(query).unit.should == expected
+        Ingreedy.parse(query).unit.should == expected
       end
     end
   end
 end
 
 describe "without units" do
-  before(:all) { @heavy = Heavy.parse "3 eggs, lightly beaten" }
+  before(:all) { @ingreedy = Ingreedy.parse "3 eggs, lightly beaten" }
 
   it "should have an amount of 3" do
-    @heavy.amount.should == 3
+    @ingreedy.amount.should == 3
   end
 
   it "should have a nil unit" do
-    @heavy.unit.should be_nil
+    @ingreedy.unit.should be_nil
   end
 
   it "should have the correct ingredient" do
-    @heavy.ingredient.should == "eggs, lightly beaten"
+    @ingreedy.ingredient.should == "eggs, lightly beaten"
   end
 end
 
 describe "ingredient formatting" do
   it "should not have any preceding or trailing whitespace" do
-    Heavy.parse("1 cup flour ").ingredient.should == "flour"
+    Ingreedy.parse("1 cup flour ").ingredient.should == "flour"
   end
 end
