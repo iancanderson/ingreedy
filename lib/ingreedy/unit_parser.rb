@@ -7,7 +7,7 @@ class UnitParser
   end
 
   def parse
-    heavy_regex = %r{
+    ingreedy_regex = %r{
       (?<amount> \d+(\.\d+)? ) {0}
       (?<fraction> \d\/\d ) {0}
 
@@ -18,7 +18,7 @@ class UnitParser
 
       (\g<amount>\s)?(\g<fraction>\s)?(\g<container_size>\s)?\g<unit_and_ingredient>
     }x
-    results = heavy_regex.match(@query)
+    results = ingreedy_regex.match(@query)
 
     @ingredient_string = results[:unit_and_ingredient]
     @container_amount = results[:container_amount]

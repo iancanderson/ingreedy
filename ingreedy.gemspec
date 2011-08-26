@@ -7,4 +7,6 @@ Gem::Specification.new do |s|
  s.summary     = "Recipe parser"
  s.description = "Natural language recipe ingredient parser that supports numeric amount, units, and ingredient"
  s.homepage    = "http://github.com/iancanderson/ingreedy"
+
+ s.files       = Dir.glob("lib/**/*.rb")
 end
