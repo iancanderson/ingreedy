@@ -16,7 +16,7 @@ class IngreedyParser
       (?<container_size> \(\g<container_amount>\s\g<container_unit>\)) {0}
       (?<unit_and_ingredient> .+ ) {0}
 
-      (\g<amount>\s)?(\g<fraction>\s)?(\g<container_size>\s)?\g<unit_and_ingredient>
+      (\g<amount>\s?)?(\g<fraction>\s)?(\g<container_size>\s)?\g<unit_and_ingredient>
     }x
     results = ingreedy_regex.match(@query)
 

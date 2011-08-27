@@ -5,7 +5,17 @@ RSpec::Matchers.define :parse_the_unit do |unit|
     ingreedy_output.unit == unit
   end
   failure_message_for_should do |ingreedy_output|
-    "expected to parse the unit #{unit} from the query '#{ingreedy_output.query}'"
+    "expected to parse the unit #{unit} from the query '#{ingreedy_output.query}' " +
+    "got '#{ingreedy_output.unit}' instead"
+  end
+end
+RSpec::Matchers.define :parse_the_amount do |amount|
+  match do |ingreedy_output|
+    ingreedy_output.amount == amount
+  end
+  failure_message_for_should do |ingreedy_output|
+    "expected to parse the amount #{amount} from the query '#{ingreedy_output.query}.' " +
+    "got '#{ingreedy_output.amount}' instead"
   end
 end
 
@@ -19,17 +29,17 @@ describe "amount formats" do
     @expected_amounts["1 2/3 cups flour"] = 1 + 2/3.to_f
     @expected_amounts["1 (28 ounce) can crushed tomatoes"] = 28
     @expected_amounts["2 (28 ounce) can crushed tomatoes"] = 56
+    # zobar uncovered this bug:
+    @expected_amounts["12oz tequila"] = 12
   end
   it "should parse the correct amount as a float" do
     @expected_amounts.each do |query, expected|
-      Ingreedy.parse(query).amount.should == expected
+      Ingreedy.parse(query).should parse_the_amount(expected)
     end
   end
 end
 
 describe "english units" do
-  # include IngreedyMatchers
-
   context "abbreviated" do
     before(:all) do
       @expected_units = {}
@@ -62,6 +72,8 @@ describe "english units" do
       @expected_units["2 tsp. flour"] = :teaspoon
       @expected_units["2 t flour"] = :teaspoon
       @expected_units["2 t. flour"] = :teaspoon
+      # zobar uncovered this bug:
+      @expected_units["12oz tequila"] = :ounce
     end
     it "should parse the units correctly" do
       @expected_units.each do |query, expected|
