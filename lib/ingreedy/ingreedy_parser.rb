@@ -1,9 +1,9 @@
-class UnitParser
+class IngreedyParser
 
-  attr_reader :amount, :unit, :ingredient
+  attr_reader :amount, :unit, :ingredient, :query
 
   def initialize(query)
-    @query = query.downcase
+    @query = query
   end
 
   def parse

@@ -1,5 +1,14 @@
 require File.expand_path(File.dirname(__FILE__) + "/../lib/ingreedy")
 
+RSpec::Matchers.define :parse_the_unit do |unit|
+  match do |ingreedy_output|
+    ingreedy_output.unit == unit
+  end
+  failure_message_for_should do |ingreedy_output|
+    "expected to parse the unit #{unit} from the query '#{ingreedy_output.query}'"
+  end
+end
+
 describe "amount formats" do
   before(:all) do
     @expected_amounts = {}
@@ -19,6 +28,8 @@ describe "amount formats" do
 end
 
 describe "english units" do
+  # include IngreedyMatchers
+
   context "abbreviated" do
     before(:all) do
       @expected_units = {}
@@ -26,7 +37,7 @@ describe "english units" do
       @expected_units["1 c. flour"] = :cup
       @expected_units["1 fl oz flour"] = :fluid_ounce
       @expected_units["1 fl. oz. flour"] = :fluid_ounce
-      @expected_units["1 (28 fl oz) can crushed tomatoes"] = :fluid_ounce      
+      @expected_units["1 (28 fl oz) can crushed tomatoes"] = :fluid_ounce
       @expected_units["2 gal flour"] = :gallon
       @expected_units["2 gal. flour"] = :gallon
       @expected_units["1 ounce flour"] = :ounce
@@ -54,7 +65,8 @@ describe "english units" do
     end
     it "should parse the units correctly" do
       @expected_units.each do |query, expected|
-        Ingreedy.parse(query).unit.should == expected
+        # Ingreedy.parse(query).unit.should == expected
+        Ingreedy.parse(query).should parse_the_unit(expected)
       end
     end
   end
