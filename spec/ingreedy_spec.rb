@@ -30,6 +30,7 @@ describe "amount formats" do
     @expected_amounts["1 (28 ounce) can crushed tomatoes"] = 28
     @expected_amounts["2 (28 ounce) can crushed tomatoes"] = 56
     @expected_amounts["1/2 cups flour"] = 0.5
+    @expected_amounts[".25 cups flour"] = 0.25
     # zobar uncovered this bug:
     @expected_amounts["12oz tequila"] = 12
   end
