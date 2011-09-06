@@ -76,6 +76,8 @@ describe "english units" do
       @expected_units["2 t. flour"] = :teaspoon
       # zobar uncovered this bug:
       @expected_units["12oz tequila"] = :ounce
+      @expected_units["2 TSP flour"] = :teaspoon
+      @expected_units["1 LB flour"] = :pound
     end
     it "should parse the units correctly" do
       @expected_units.each do |query, expected|

@@ -76,6 +76,18 @@ class IngreedyParser
       end
     end
 
+    # if no unit yet, try it again downcased
+    if @unit.nil?
+      @ingredient_string.downcase!
+      @unit_map.each do |abbrev, unit|
+        if @ingredient_string.start_with?(abbrev + " ")
+          # if a unit is found, remove it from the ingredient string
+          @ingredient_string.sub! abbrev, ""
+          @unit = unit
+        end
+      end
+    end
+
     # if we still don't have a unit, check to see if we have a container unit
     if @unit.nil? and @container_unit
       @unit_map.each do |abbrev, unit|
