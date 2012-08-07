@@ -1,6 +1,6 @@
 # Usage
 
-```
+```ruby
 result = Ingreedy.parse('1 lb. potatoes')
 print result.amount
   #=> 1.0
