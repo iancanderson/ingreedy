@@ -11,5 +11,3 @@ print result.ingredient
 ```
 
 # Build Status [![Build Status](https://secure.travis-ci.org/iancanderson/ingreedy.png?branch=master)](http://travis-ci.org/iancanderson/ingreedy)
-
-# Dependency Status [![Dependency Status](https://gemnasium.com/iancanderson/ingreedy.png?travis)](https://gemnasium.com/iancanderson/ingreedy)
