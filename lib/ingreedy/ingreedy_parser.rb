@@ -56,7 +56,7 @@ class IngreedyParser
     set_unit_variations :pint, ["pt", "pt.", "pint", "pints"]
     set_unit_variations :pound, ["lb", "lb.", "pound", "pounds"]
     set_unit_variations :quart, ["qt", "qt.", "qts", "qts.", "quart", "quarts"]
-    set_unit_variations :tablespoon, ["tbsp.", "tbsp", "T", "T.", "tablespoon", "tablespoons"]
+    set_unit_variations :tablespoon, ["tbsp.", "tbsp", "T", "T.", "tablespoon", "tablespoons", "Tbs.", "tbs.", "tbs"]
     set_unit_variations :teaspoon, ["tsp.", "tsp", "t", "t.", "teaspoon", "teaspoons"]
     # metric units
     set_unit_variations :gram, ["g", "g.", "gr", "gr.", "gram", "grams"]

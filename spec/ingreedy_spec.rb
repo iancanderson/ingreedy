@@ -68,6 +68,8 @@ describe "english units" do
       @expected_units["2 qts. flour"] = :quart
       @expected_units["2 tbsp flour"] = :tablespoon
       @expected_units["2 tbsp. flour"] = :tablespoon
+      @expected_units["2 Tbs flour"] = :tablespoon
+      @expected_units["2 Tbs. flour"] = :tablespoon
       @expected_units["2 T flour"] = :tablespoon
       @expected_units["2 T. flour"] = :tablespoon
       @expected_units["2 tsp flour"] = :teaspoon
