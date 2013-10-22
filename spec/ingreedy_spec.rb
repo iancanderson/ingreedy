@@ -157,6 +157,25 @@ describe "metric units" do
   end
 end
 
+describe "nonstandard units" do
+  before(:all) do
+    @expected_units = {}
+    @expected_units["1 pinch pepper"] = :pinch
+    @expected_units["2 pinches pepper"] = :pinch
+    @expected_units["1 dash salt"] = :dash
+    @expected_units["2 dashes salt"] = :dash
+    @expected_units["1 touch hot sauce"] = :touch
+    @expected_units["2 touches hot sauce"] = :touch
+    @expected_units["1 handful rice"] = :handful
+    @expected_units["2 handfuls rice"] = :handful
+  end
+  it "should parse the units correctly" do
+    @expected_units.each do |query, expected|
+      Ingreedy.parse(query).unit.should == expected
+    end
+  end
+end
+
 describe "without units" do
   before(:all) { @ingreedy = Ingreedy.parse "3 eggs, lightly beaten" }
 

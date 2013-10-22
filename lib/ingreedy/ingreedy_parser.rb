@@ -64,6 +64,11 @@ class IngreedyParser
     set_unit_variations :liter, ["l", "l.", "liter", "liters"]
     set_unit_variations :milligram, ["mg", "mg.", "milligram", "milligrams"]
     set_unit_variations :milliliter, ["ml", "ml.", "milliliter", "milliliters"]
+    # nonstandard units
+    set_unit_variations :pinch, ["pinch", "pinches"]
+    set_unit_variations :dash, ["dash", "dashes"]
+    set_unit_variations :touch, ["touch", "touches"]
+    set_unit_variations :handful, ["handful", "handfuls"]
   end
   def parse_unit
     create_unit_map if @unit_map.nil?
