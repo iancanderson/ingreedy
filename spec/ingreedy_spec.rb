@@ -168,6 +168,10 @@ describe "nonstandard units" do
     @expected_units["2 touches hot sauce"] = :touch
     @expected_units["1 handful rice"] = :handful
     @expected_units["2 handfuls rice"] = :handful
+    @expected_units["1 can soup"] = :can
+    @expected_units["2 cans soup"] = :can
+    @expected_units["1 glass cold water"] = :glass
+    @expected_units["2 glasses cold water"] = :glass
   end
   it "should parse the units correctly" do
     @expected_units.each do |query, expected|
