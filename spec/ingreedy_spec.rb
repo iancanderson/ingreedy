@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + "/../lib/ingreedy")
+require 'spec_helper'
 
 RSpec::Matchers.define :parse_the_unit do |unit|
   match do |ingreedy_output|
