@@ -80,8 +80,6 @@ class IngreedyParser
   end
 
   def parse_unit
-    create_unit_map if @unit_map.nil?
-
     unit_map.each do |abbrev, unit|
       if @ingredient_string.start_with?(abbrev + " ")
         # if a unit is found, remove it from the ingredient string
