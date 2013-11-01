@@ -1,6 +1,6 @@
 class IngreedyParser
 
-  attr_reader :amount, :unit, :ingredient, :query
+  attr_reader :amount, :unit, :ingredient
 
   def initialize(query)
     @query = query
@@ -41,13 +41,21 @@ class IngreedyParser
     @amount = amount_string.to_f + fraction
     @amount *= @container_amount.to_f if @container_amount
   end
+
   def set_unit_variations(unit, variations)
     variations.each do |abbrev|
       @unit_map[abbrev] = unit
     end
   end
+
+  def unit_map
+    create_unit_map unless @unit_map
+    @unit_map
+  end
+
   def create_unit_map
     @unit_map = {}
+
     # english units
     set_unit_variations :cup, ["c.", "c", "cup", "cups"]
     set_unit_variations :fluid_ounce, ["fl. oz.", "fl oz", "fluid ounce", "fluid ounces"]
@@ -70,10 +78,11 @@ class IngreedyParser
     set_unit_variations :touch, ["touch", "touches"]
     set_unit_variations :handful, ["handful", "handfuls"]
   end
+
   def parse_unit
     create_unit_map if @unit_map.nil?
 
-    @unit_map.each do |abbrev, unit|
+    unit_map.each do |abbrev, unit|
       if @ingredient_string.start_with?(abbrev + " ")
         # if a unit is found, remove it from the ingredient string
         @ingredient_string.sub! abbrev, ""
@@ -100,6 +109,7 @@ class IngreedyParser
       end
     end
   end
+
   def parse_unit_and_ingredient
     parse_unit
     # clean up ingredient string
