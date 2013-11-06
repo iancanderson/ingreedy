@@ -77,6 +77,8 @@ class IngreedyParser
     set_unit_variations :dash, ["dash", "dashes"]
     set_unit_variations :touch, ["touch", "touches"]
     set_unit_variations :handful, ["handful", "handfuls"]
+    set_unit_variations :can, ["can", "cans"]
+    set_unit_variations :glass, ["glass", "glasses"]
   end
 
   def parse_unit
