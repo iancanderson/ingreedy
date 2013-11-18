@@ -5,9 +5,8 @@ require File.join(path, 'ingreedy_parser')
 module Ingreedy
   class << self
     def parse(query)
-      parser = IngreedyParser.new(query)
+      parser = Parser.new(query)
       parser.parse
-      parser
     end
   end
 end

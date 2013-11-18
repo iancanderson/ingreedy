@@ -1,93 +1,111 @@
 require 'spec_helper'
 
-RSpec::Matchers.define :parse_the_unit do |unit|
-  match do |ingreedy_output|
-    ingreedy_output.unit == unit
-  end
-  failure_message_for_should do |ingreedy_output|
-    "expected to parse the unit #{unit} from the query '#{ingreedy_output.query}' " +
-    "got '#{ingreedy_output.unit}' instead"
-  end
-end
-RSpec::Matchers.define :parse_the_amount do |amount|
-  match do |ingreedy_output|
-    ingreedy_output.amount == amount
-  end
-  failure_message_for_should do |ingreedy_output|
-    "expected to parse the amount #{amount} from the query '#{ingreedy_output.query}.' " +
-    "got '#{ingreedy_output.amount}' instead"
-  end
-end
+describe Ingreedy do
 
-describe "amount formats" do
-  before(:all) do
-    @expected_amounts = {}
-    @expected_amounts["1 cup flour"] = 1.0
-    @expected_amounts["1 1/2 cups flour"] = 1.5
-    @expected_amounts["1.0 cup flour"] = 1.0
-    @expected_amounts["1.5 cups flour"] = 1.5
-    @expected_amounts["1 2/3 cups flour"] = 1 + 2/3.to_f
-    @expected_amounts["1 (28 ounce) can crushed tomatoes"] = 28
-    @expected_amounts["2 (28 ounce) can crushed tomatoes"] = 56
-    @expected_amounts["1/2 cups flour"] = 0.5
-    @expected_amounts[".25 cups flour"] = 0.25
-    # zobar uncovered this bug:
-    @expected_amounts["12oz tequila"] = 12
+  context "amount parsing" do
+
+    {
+      "1 cup flour" => 1,
+      "1 1/2 cups flour" => '3/2',
+      "1.0 cup flour" => 1,
+      "1.5 cups flour" => '3/2',
+      "1 2/3 cups flour" => '5/3',
+      "1 (28 ounce) can crushed tomatoes" => 28,
+      "2 (28 ounce) can crushed tomatoes" => 56,
+      "1/2 cups flour" => '1/2',
+      ".25 cups flour" => '1/4',
+      "12oz tequila" => 12
+    }.each do |query, expected|
+
+      it "should parse the correct amount as a rational" do
+        Ingreedy.parse(query).should parse_the_amount(expected.to_r)
+      end
+
+    end
+
   end
-  it "should parse the correct amount as a float" do
-    @expected_amounts.each do |query, expected|
-      Ingreedy.parse(query).should parse_the_amount(expected)
+
+  context "unit parsing" do
+
+    context "(english)" do
+
+    end
+
+    context "(metric)" do
+
+    end
+
+    context "(nonstandard)" do
+
     end
   end
+
+  context "all together now" do
+    subject { Ingreedy.parse('1 lb potatoes') }
+
+    its(:amount) { should == 1 }
+    its(:unit) { should == :pound }
+    its(:ingredient) { should == 'potatoes' }
+
+  end
+
 end
 
 describe "english units" do
   context "abbreviated" do
-    before(:all) do
-      @expected_units = {}
-      @expected_units["1 c flour"] = :cup
-      @expected_units["1 c. flour"] = :cup
-      @expected_units["1 fl oz flour"] = :fluid_ounce
-      @expected_units["1 fl. oz. flour"] = :fluid_ounce
-      @expected_units["1 (28 fl oz) can crushed tomatoes"] = :fluid_ounce
-      @expected_units["2 gal flour"] = :gallon
-      @expected_units["2 gal. flour"] = :gallon
-      @expected_units["1 ounce flour"] = :ounce
-      @expected_units["2 ounces flour"] = :ounce
-      @expected_units["1 oz flour"] = :ounce
-      @expected_units["1 oz. flour"] = :ounce
-      @expected_units["2 pt flour"] = :pint
-      @expected_units["2 pt. flour"] = :pint
-      @expected_units["1 lb flour"] = :pound
-      @expected_units["1 lb. flour"] = :pound
-      @expected_units["1 pound flour"] = :pound
-      @expected_units["2 pounds flour"] = :pound
-      @expected_units["2 qt flour"] = :quart
-      @expected_units["2 qt. flour"] = :quart
-      @expected_units["2 qts flour"] = :quart
-      @expected_units["2 qts. flour"] = :quart
-      @expected_units["2 tbsp flour"] = :tablespoon
-      @expected_units["2 tbsp. flour"] = :tablespoon
-      @expected_units["2 Tbs flour"] = :tablespoon
-      @expected_units["2 Tbs. flour"] = :tablespoon
-      @expected_units["2 T flour"] = :tablespoon
-      @expected_units["2 T. flour"] = :tablespoon
-      @expected_units["2 tsp flour"] = :teaspoon
-      @expected_units["2 tsp. flour"] = :teaspoon
-      @expected_units["2 t flour"] = :teaspoon
-      @expected_units["2 t. flour"] = :teaspoon
-      # zobar uncovered this bug:
-      @expected_units["12oz tequila"] = :ounce
-      @expected_units["2 TSP flour"] = :teaspoon
-      @expected_units["1 LB flour"] = :pound
-    end
-    it "should parse the units correctly" do
-      @expected_units.each do |query, expected|
-        # Ingreedy.parse(query).unit.should == expected
+    {
+      #"1 c flour" => :cup,
+      #"1 c. flour" => :cup,
+      #"1 fl oz flour" => :fluid_ounce,
+      #"1 fl. oz. flour" => :fluid_ounce,
+      #"1 (28 fl oz) can crushed tomatoes" => :fluid_ounce,
+      #"2 gal flour" => :gallon,
+      #"2 gal. flour" => :gallon,
+      #"1 ounce flour" => :ounce,
+      #"2 ounces flour" => :ounce,
+      #"1 oz flour" => :ounce,
+      #"1 oz. flour" => :ounce,
+      #"2 pt flour" => :pint,
+      #"2 pt. flour" => :pint,
+      #"1 lb flour" => :pound,
+      #"1 lb. flour" => :pound,
+      #"1 pound flour" => :pound,
+      #"2 pounds flour" => :pound,
+      #"2 qt flour" => :quart,
+      #"2 qt. flour" => :quart,
+      #"2 qts flour" => :quart,
+      #"2 qts. flour" => :quart,
+      #"2 tbsp flour" => :tablespoon,
+      #"2 tbsp. flour" => :tablespoon,
+      "2 Tbs flour" => :tablespoon,
+      #"2 Tbs. flour" => :tablespoon,
+      #"2 T flour" => :tablespoon,
+      #"2 T. flour" => :tablespoon,
+      #"2 tsp flour" => :teaspoon,
+      #"2 tsp. flour" => :teaspoon,
+      #"2 t flour" => :teaspoon,
+      #"2 t. flour" => :teaspoon,
+      #"12oz tequila" => :ounce,
+      #"2 TSP flour" => :teaspoon,
+      #"1 LB flour" => :pound
+    }.each do |query, expected|
+
+      it "should parse the units correctly" do
         Ingreedy.parse(query).should parse_the_unit(expected)
       end
+
     end
   end
+
+  context 'unit rule' do
+    subject { Ingreedy::Parser.new('1 Tbs salt').unit }
+
+    it { should parse 'Tbs' }
+    it { should_not parse 'Tbbbbbs' }
+
+  end
+
+=begin
   context "long form" do
     before(:all) do
       @expected_units = {}
@@ -108,12 +126,14 @@ describe "english units" do
     end
     it "should parse the units correctly" do
       @expected_units.each do |query, expected|
-        Ingreedy.parse(query).unit.should == expected
+        Ingreedy.parse(query).should parse_the_unit(expected)
       end
     end
   end
+=end
 end
 
+=begin
 describe "metric units" do
   context "abbreviated" do
     before(:all) do
@@ -133,7 +153,7 @@ describe "metric units" do
     end
     it "should parse the units correctly" do
       @expected_units.each do |query, expected|
-        Ingreedy.parse(query).unit.should == expected
+        Ingreedy.parse(query).should parse_the_unit(expected)
       end
     end
   end
@@ -153,7 +173,7 @@ describe "metric units" do
     end
     it "should parse the units correctly" do
       @expected_units.each do |query, expected|
-        Ingreedy.parse(query).unit.should == expected
+        Ingreedy.parse(query).should parse_the_unit(expected)
       end
     end
   end
@@ -173,7 +193,7 @@ describe "nonstandard units" do
   end
   it "should parse the units correctly" do
     @expected_units.each do |query, expected|
-      Ingreedy.parse(query).unit.should == expected
+      Ingreedy.parse(query).should parse_the_unit(expected)
     end
   end
 end
@@ -199,3 +219,4 @@ describe "ingredient formatting" do
     Ingreedy.parse("1 cup flour ").ingredient.should == "flour"
   end
 end
+=end

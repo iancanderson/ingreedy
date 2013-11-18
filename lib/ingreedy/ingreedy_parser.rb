@@ -1,116 +1,108 @@
-class IngreedyParser
+require 'parslet'
 
-  attr_reader :amount, :unit, :ingredient
+require_relative 'amount_parser'
+require_relative 'rationalizer'
+require_relative 'unit_parser'
+require_relative 'unit_variation_mapper'
 
-  def initialize(query)
-    @query = query
-  end
+module Ingreedy
 
-  def parse
-    ingreedy_regex = %r{
-      (?<amount> .?\d+(\.\d+)? ) {0}
-      (?<fraction> \d\/\d ) {0}
+  class Parser < Parslet::Parser
 
-      (?<container_amount> \d+(\.\d+)?) {0}
-      (?<container_unit> .+) {0}
-      (?<container_size> \(\g<container_amount>\s\g<container_unit>\)) {0}
-      (?<unit_and_ingredient> .+ ) {0}
+    attr_reader :original_query
+    Result = Struct.new(:amount, :unit, :ingredient, :original_query)
 
-      (\g<fraction>\s)?(\g<amount>\s?)?(\g<fraction>\s)?(\g<container_size>\s)?\g<unit_and_ingredient>
-    }x
-    results = ingreedy_regex.match(@query)
-
-    @ingredient_string = results[:unit_and_ingredient]
-    @container_amount = results[:container_amount]
-    @container_unit = results[:container_unit]
-
-    parse_amount results[:amount], results[:fraction]
-    parse_unit_and_ingredient
-  end
-
-  private
-
-  def parse_amount(amount_string, fraction_string)
-    fraction = 0
-    if fraction_string
-      numbers = fraction_string.split("\/")
-      numerator = numbers[0].to_f
-      denominator = numbers[1].to_f
-      fraction = numerator / denominator
+    rule(:amount) do
+      AmountParser.new.as(:amount)
     end
-    @amount = amount_string.to_f + fraction
-    @amount *= @container_amount.to_f if @container_amount
-  end
 
-  def set_unit_variations(unit, variations)
-    variations.each do |abbrev|
-      @unit_map[abbrev] = unit
+    rule(:whitespace) do
+      match("\s")
     end
-  end
 
-  def unit_map
-    create_unit_map unless @unit_map
-    @unit_map
-  end
+    rule(:container_amount) do
+      AmountParser.new(key_prefix: 'container')
+    end
 
-  def create_unit_map
-    @unit_map = {}
+    rule(:unit) do
+      UnitParser.new
+    end
 
-    # english units
-    set_unit_variations :cup, ["c.", "c", "cup", "cups"]
-    set_unit_variations :fluid_ounce, ["fl. oz.", "fl oz", "fluid ounce", "fluid ounces"]
-    set_unit_variations :gallon, ["gal", "gal.", "gallon", "gallons"]
-    set_unit_variations :ounce, ["oz", "oz.", "ounce", "ounces"]
-    set_unit_variations :pint, ["pt", "pt.", "pint", "pints"]
-    set_unit_variations :pound, ["lb", "lb.", "pound", "pounds"]
-    set_unit_variations :quart, ["qt", "qt.", "qts", "qts.", "quart", "quarts"]
-    set_unit_variations :tablespoon, ["tbsp.", "tbsp", "T", "T.", "tablespoon", "tablespoons", "tbs.", "tbs"]
-    set_unit_variations :teaspoon, ["tsp.", "tsp", "t", "t.", "teaspoon", "teaspoons"]
-    # metric units
-    set_unit_variations :gram, ["g", "g.", "gr", "gr.", "gram", "grams"]
-    set_unit_variations :kilogram, ["kg", "kg.", "kilogram", "kilograms"]
-    set_unit_variations :liter, ["l", "l.", "liter", "liters"]
-    set_unit_variations :milligram, ["mg", "mg.", "milligram", "milligrams"]
-    set_unit_variations :milliliter, ["ml", "ml.", "milliliter", "milliliters"]
-    # nonstandard units
-    set_unit_variations :pinch, ["pinch", "pinches"]
-    set_unit_variations :dash, ["dash", "dashes"]
-    set_unit_variations :touch, ["touch", "touches"]
-    set_unit_variations :handful, ["handful", "handfuls"]
-  end
+    rule(:container_unit) do
+      UnitParser.new
+    end
 
-  def parse_unit
-    unit_map.each do |abbrev, unit|
-      if @ingredient_string.start_with?(abbrev + " ")
-        # if a unit is found, remove it from the ingredient string
-        @ingredient_string.sub! abbrev, ""
-        @unit = unit
+    rule(:container_size) do
+      # e.g. (12 ounce)
+      str('(') >> container_amount.as(:container_amount) >> whitespace >> container_unit >> str(')') >> whitespace
+    end
+
+    rule(:ingredient) do
+      any.repeat
+    end
+
+    rule(:ingredient_addition) do
+      # e.g. 1/2 (12 oz) can black beans
+      amount >>
+      whitespace.maybe >>
+      container_size.maybe >>
+      (unit.as(:unit) >> whitespace.as(:whitespace)).maybe >>
+      ingredient.as(:ingredient)
+    end
+
+    root :ingredient_addition
+
+    def initialize(original_query)
+      @original_query = original_query
+    end
+
+    def parse
+      result = Result.new
+      result[:original_query] = original_query
+
+      parslet_output = super(original_query)
+
+      result[:amount] = rationalize_total_amount(parslet_output[:amount], parslet_output[:container_amount])
+
+      if parslet_output[:unit]
+        result[:unit] = convert_unit_variation_to_canonical(parslet_output[:unit].to_s)
+      end
+
+      result[:ingredient] = parslet_output[:ingredient].to_s.lstrip.rstrip #TODO cheating
+
+      result
+    end
+
+    private
+
+    def convert_unit_variation_to_canonical(unit_variation)
+      UnitVariationMapper.unit_from_variation(unit_variation)
+    end
+
+    def rationalize_total_amount(amount, container_amount)
+      if container_amount
+        rationalize_amount(amount) * rationalize_amount(container_amount, 'container_')
+      else
+        rationalize_amount(amount)
       end
     end
 
-    # if no unit yet, try it again downcased
-    if @unit.nil?
-      @ingredient_string.downcase!
-      @unit_map.each do |abbrev, unit|
-        if @ingredient_string.start_with?(abbrev + " ")
-          # if a unit is found, remove it from the ingredient string
-          @ingredient_string.sub! abbrev, ""
-          @unit = unit
-        end
-      end
+    def rationalize_amount(amount, capture_key_prefix = '')
+      integer = amount["#{capture_key_prefix}integer_amount".to_sym]
+      integer &&= integer.to_s
+
+      float = amount["#{capture_key_prefix}float_amount".to_sym]
+      float &&= float.to_s
+
+      fraction = amount["#{capture_key_prefix}fraction_amount".to_sym]
+      fraction &&= fraction.to_s
+
+      Rationalizer.rationalize(
+        integer:  integer,
+        float:    float,
+        fraction: fraction
+      )
     end
 
-    # if we still don't have a unit, check to see if we have a container unit
-    if @unit.nil? and @container_unit
-      @unit_map.each do |abbrev, unit|
-        @unit = unit if abbrev == @container_unit
-      end
-    end
-  end
-
-  def parse_unit_and_ingredient
-    parse_unit
-    # clean up ingredient string
-    @ingredient = @ingredient_string.lstrip.rstrip
   end
 end
