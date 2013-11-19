@@ -54,40 +54,41 @@ end
 describe "english units" do
   context "abbreviated" do
     {
-      #"1 c flour" => :cup,
-      #"1 c. flour" => :cup,
-      #"1 fl oz flour" => :fluid_ounce,
-      #"1 fl. oz. flour" => :fluid_ounce,
-      #"1 (28 fl oz) can crushed tomatoes" => :fluid_ounce,
-      #"2 gal flour" => :gallon,
-      #"2 gal. flour" => :gallon,
-      #"1 ounce flour" => :ounce,
-      #"2 ounces flour" => :ounce,
-      #"1 oz flour" => :ounce,
-      #"1 oz. flour" => :ounce,
-      #"2 pt flour" => :pint,
-      #"2 pt. flour" => :pint,
-      #"1 lb flour" => :pound,
-      #"1 lb. flour" => :pound,
-      #"1 pound flour" => :pound,
-      #"2 pounds flour" => :pound,
-      #"2 qt flour" => :quart,
-      #"2 qt. flour" => :quart,
-      #"2 qts flour" => :quart,
-      #"2 qts. flour" => :quart,
-      #"2 tbsp flour" => :tablespoon,
-      #"2 tbsp. flour" => :tablespoon,
+      "1 c flour" => :cup,
+      "1 c. flour" => :cup,
+      "1 fl oz flour" => :fluid_ounce,
+      "1 fl. oz. flour" => :fluid_ounce,
+      "1 (28 fl oz) can crushed tomatoes" => :fluid_ounce,
+      "2 gal flour" => :gallon,
+      "2 gal. flour" => :gallon,
+      "1 ounce flour" => :ounce,
+      "2 ounces flour" => :ounce,
+      "1 oz flour" => :ounce,
+      "1 oz. flour" => :ounce,
+      "2 pt flour" => :pint,
+      "2 pt. flour" => :pint,
+      "1 lb flour" => :pound,
+      "1 lb. flour" => :pound,
+      "1 pound flour" => :pound,
+      "2 pounds flour" => :pound,
+      "2 qt flour" => :quart,
+      "2 qt. flour" => :quart,
+      "2 qts flour" => :quart,
+      "2 qts. flour" => :quart,
+      "2 tbsp flour" => :tablespoon,
+      "2 tbsp. flour" => :tablespoon,
       "2 Tbs flour" => :tablespoon,
-      #"2 Tbs. flour" => :tablespoon,
-      #"2 T flour" => :tablespoon,
-      #"2 T. flour" => :tablespoon,
-      #"2 tsp flour" => :teaspoon,
-      #"2 tsp. flour" => :teaspoon,
-      #"2 t flour" => :teaspoon,
-      #"2 t. flour" => :teaspoon,
-      #"12oz tequila" => :ounce,
-      #"2 TSP flour" => :teaspoon,
-      #"1 LB flour" => :pound
+      "2 Tbs. flour" => :tablespoon,
+      "2 T flour" => :tablespoon,
+      "2 T. flour" => :tablespoon,
+      "2 tsp flour" => :teaspoon,
+      "2 tsp. flour" => :teaspoon,
+      "2 t flour" => :teaspoon,
+      "2 t. flour" => :teaspoon,
+      "12oz tequila" => :ounce,
+      "2 TSP flour" => :teaspoon,
+      "1 LB flour" => :pound,
+      "1 tSP sugar" => :teaspoon
     }.each do |query, expected|
 
       it "should parse the units correctly" do
@@ -103,6 +104,24 @@ describe "english units" do
     it { should parse 'Tbs' }
     it { should_not parse 'Tbbbbbs' }
 
+    it { should parse 'Tbs' }
+    it { should parse 'tBS' }
+    it { should parse 'tBs' }
+    it { should parse 'TBs' }
+    it { should parse 'TBS' }
+    it { should parse 'tbs' }
+  end
+
+  context 'unit_and_whitespace rule' do
+    subject { Ingreedy::Parser.new('1 Tbs salt').unit_and_whitespace }
+
+    it { should parse 'tBS ' }
+    it { should parse 'tBs ' }
+    it { should parse 'tbs ' }
+    it { should parse 'Tbs ' }
+    it { should parse 'TBs ' }
+    it { should parse 'TBS ' }
+    it { should parse 'pInch ' }
   end
 
 =begin

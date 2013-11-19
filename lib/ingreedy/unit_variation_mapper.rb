@@ -5,7 +5,7 @@ module Ingreedy
       # Return these in order of size, descending
       # That way, the longer versions will try to be parsed first, then the shorter versions
       # e.g. so '1 cup flour' will be parsed as 'cup' instead of 'c'
-      variations_map.keys.flatten.sort { |a, b| b.length <=> a.length }
+      @@all_variations ||= variations_map.keys.flatten.sort { |a, b| b.length <=> a.length }
     end
 
     def self.unit_from_variation(variation)

@@ -2,27 +2,14 @@ module Ingreedy
 
   class UnitParser < Parslet::Parser
     rule(:unit) do
-      case_sensitive_unit | case_insensitive_unit
-    end
+      UnitVariationMapper.all_variations.map { |variation|
+        case_sensitive = str(variation)
+        case_insensitive = variation.chars.map { |char|
+          match "[#{char.upcase}#{char.downcase}]"
+        }.reduce(:>>)
 
-    rule(:case_sensitive_unit) do
-      UnitVariationMapper.all_variations.
-        map { |variation|
-          str(variation)
-        }.reduce(:|)
-    end
-
-    rule(:case_insensitive_unit) do
-      UnitVariationMapper.all_variations.
-        map { |variation|
-          variation.chars.map { |char|
-            if char.upcase != char.downcase
-              match "[#{char.upcase}#{char.downcase}]"
-            else
-              str(char)
-            end
-          }.reduce(:>>)
-        }.reduce(:|)
+        case_sensitive | case_insensitive
+      }.reduce(:|)
     end
 
     root :unit

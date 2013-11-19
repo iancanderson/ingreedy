@@ -41,12 +41,16 @@ module Ingreedy
       any.repeat
     end
 
+    rule(:unit_and_whitespace) do
+      unit.as(:unit) >> whitespace
+    end
+
     rule(:ingredient_addition) do
       # e.g. 1/2 (12 oz) can black beans
       amount >>
       whitespace.maybe >>
       container_size.maybe >>
-      (unit.as(:unit) >> whitespace.as(:whitespace)).maybe >>
+      unit_and_whitespace.maybe >>
       ingredient.as(:ingredient)
     end
 
