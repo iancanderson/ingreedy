@@ -16,6 +16,5 @@ Gem::Specification.new do |s|
  s.add_development_dependency 'rspec', '~> 2.11.0'
  s.add_development_dependency 'coveralls', '~> 0.7.0'
  s.add_development_dependency 'pry'
- s.add_development_dependency 'pry-debugger'
  s.files       = Dir.glob("lib/**/*.rb")
 end
