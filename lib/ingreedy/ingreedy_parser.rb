@@ -34,7 +34,7 @@ module Ingreedy
 
     rule(:container_size) do
       # e.g. (12 ounce)
-      str('(') >> container_amount.as(:container_amount) >> whitespace >> container_unit >> str(')') >> whitespace
+      str('(') >> container_amount.as(:container_amount) >> whitespace >> container_unit.as(:unit) >> str(')') >> whitespace
     end
 
     rule(:ingredient) do
