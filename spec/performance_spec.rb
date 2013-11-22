@@ -25,4 +25,14 @@ describe Ingreedy do
     #}.should < 0.01
   #end
 
+  #it 'should parse units faster with regex' do
+    #Benchmark.realtime {
+      #variations = Ingreedy::UnitVariationMapper.all_variations
+      #case_sensitive = Regexp.union(variations)
+      #case_insensitive = Regexp.union(variations.map{ |v| Regexp.new(v, Regexp::IGNORECASE) })
+      #both = Regexp.union(case_sensitive, case_insensitive)
+      #both.match('tbsp')
+    #}.should < 0.001
+  #end
+
 end
