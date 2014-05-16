@@ -15,7 +15,7 @@ describe Ingreedy do
       "2 (28 ounce) can crushed tomatoes" => 56,
       "3 28 ounce can crushed tomatoes" => 84,
       "one 28 ounce can crushed tomatoes" => 28,
-     #  "two five-ounce can crushed tomatoes" => 10,
+      "two five-ounce can crushed tomatoes" => 10,
       "two 28 ounce cans crushed tomatoes" => 56,
       "three 28 ounce cans crushed tomatoes" => 84,
       "1/2 cups flour" => '1/2',

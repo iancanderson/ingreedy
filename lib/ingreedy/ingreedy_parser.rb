@@ -32,11 +32,15 @@ module Ingreedy
       UnitParser.new
     end
 
+    rule(:amount_unit_separator) do
+      whitespace | str('-')
+    end
+
     rule(:container_size) do
       # e.g. (12 ounce) or 12 ounce
       str('(').maybe >>
       container_amount.as(:container_amount) >>
-      whitespace >>
+      amount_unit_separator >>
       container_unit.as(:unit) >>
       str(')').maybe >> whitespace
     end
