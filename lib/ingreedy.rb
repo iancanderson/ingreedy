@@ -1,5 +1,6 @@
 path = File.expand_path(File.join(File.dirname(__FILE__), 'ingreedy'))
 
+require File.join(path, 'case_insensitive_parser')
 require File.join(path, 'ingreedy_parser')
 
 module Ingreedy

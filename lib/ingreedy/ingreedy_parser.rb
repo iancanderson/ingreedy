@@ -33,8 +33,12 @@ module Ingreedy
     end
 
     rule(:container_size) do
-      # e.g. (12 ounce)
-      str('(') >> container_amount.as(:container_amount) >> whitespace >> container_unit.as(:unit) >> str(')') >> whitespace
+      # e.g. (12 ounce) or 12 ounce
+      str('(').maybe >>
+      container_amount.as(:container_amount) >>
+      whitespace >>
+      container_unit.as(:unit) >>
+      str(')').maybe >> whitespace
     end
 
     rule(:ingredient) do
@@ -101,10 +105,14 @@ module Ingreedy
       fraction = amount["#{capture_key_prefix}fraction_amount".to_sym]
       fraction &&= fraction.to_s
 
+      word = amount["#{capture_key_prefix}word_integer_amount".to_sym]
+      word &&= word.to_s
+
       Rationalizer.rationalize(
         integer:  integer,
         float:    float,
-        fraction: fraction
+        fraction: fraction,
+        word:     word
       )
     end
 

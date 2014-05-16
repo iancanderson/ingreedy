@@ -6,12 +6,18 @@ describe Ingreedy do
 
     {
       "1 cup flour" => 1,
+      "one cup flour" => 1,
       "1 1/2 cups flour" => '3/2',
       "1.0 cup flour" => 1,
       "1.5 cups flour" => '3/2',
       "1 2/3 cups flour" => '5/3',
       "1 (28 ounce) can crushed tomatoes" => 28,
       "2 (28 ounce) can crushed tomatoes" => 56,
+      "3 28 ounce can crushed tomatoes" => 84,
+      "one 28 ounce can crushed tomatoes" => 28,
+     #  "two five-ounce can crushed tomatoes" => 10,
+      "two 28 ounce cans crushed tomatoes" => 56,
+      "three 28 ounce cans crushed tomatoes" => 84,
       "1/2 cups flour" => '1/2',
       ".25 cups flour" => '1/4',
       "12oz tequila" => 12
