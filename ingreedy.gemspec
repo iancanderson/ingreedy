@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
  s.homepage    = "http://github.com/iancanderson/ingreedy"
 
  s.add_dependency 'parslet', '~> 1.5.0'
+ s.add_dependency 'numbers_in_words', '~> 0.2.0'
 
  s.add_development_dependency 'rake', '~> 0.9'
  s.add_development_dependency 'rspec', '~> 2.11.0'

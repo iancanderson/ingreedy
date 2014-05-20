@@ -27,5 +27,11 @@ describe Ingreedy::Rationalizer do
     end
   end
 
+  context 'with an english digit' do
+    it 'gives back a rational' do
+      subject.rationalize(word: 'one').should == '1'.to_r
+    end
+  end
+
 end
 
