@@ -5,7 +5,7 @@ rvm:
   - ruby-head
   - jruby-19mode
   - jruby-head
-  - rbx-19mode
 matrix:
   allow_failures:
+    - rvm: rbx-19mode
     - rvm: rbx-2.1.1
