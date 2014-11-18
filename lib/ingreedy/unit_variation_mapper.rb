@@ -30,24 +30,24 @@ module Ingreedy
     def self.build_variations_map
       #TODO prioritize the un-abbreviated versions
       {
-        ['cups', 'cup', 'c.', 'c'] => :cup,
-        ["fl. oz.", "fl oz", "fluid ounce", "fluid ounces"] => :fluid_ounce,
-        ["gal", "gal.", "gallon", "gallons"] => :gallon,
-        ["oz", "oz.", "ounce", "ounces"] => :ounce,
-        ["pt", "pt.", "pint", "pints"] => :pint,
-        ["lb", "lb.", "pound", "pounds"] => :pound,
-        ["qt", "qt.", "qts", "qts.", "quart", "quarts"] => :quart,
-        ["tbsp.", "tbsp", "T", "T.", "tablespoon", "tablespoons", "tbs.", "tbs"] => :tablespoon,
-        ["tsp.", "tsp", "t", "t.", "teaspoon", "teaspoons"] => :teaspoon,
-        ["g", "g.", "gr", "gr.", "gram", "grams"] => :gram,
-        ["kg", "kg.", "kilogram", "kilograms"] => :kilogram,
-        ["l", "l.", "liter", "liters"] => :liter,
-        ["mg", "mg.", "milligram", "milligrams"] => :milligram,
-        ["ml", "ml.", "milliliter", "milliliters"] => :milliliter,
-        ["pinch", "pinches"] => :pinch,
-        ["dash", "dashes"] => :dash,
-        ["touch", "touches"] => :touch,
-        ["handful", "handfuls"] => :handful
+        ["cups", "cup", "c.", "c"] => :cup,
+        ["fluid ounces", "fluid ounce", "fl. oz.", "fl oz"] => :fluid_ounce,
+        ["gallons", "gallon", "gal.", "gal"] => :gallon,
+        ["ounces", "ounce", "oz.", "oz"] => :ounce,
+        ["pints", "pint", "pt.", "pt"] => :pint,
+        ["pounds", "pound", "lb.", "lb"] => :pound,
+        ["quarts", "quart", "qts.", "qts", "qt.", "qt"] => :quart,
+        ["tablespoons", "tablespoon", "tbsp.", "tbsp", "tbs.", "tbs", "T", "T."] => :tablespoon,
+        ["teaspoons", "teaspoon", "tsp.", "tsp", "t", "t."] => :teaspoon,
+        ["grams", "gram", "gr.", "gr", "g.", "g"] => :gram,
+        ["kilograms", "kilogram", "kg.", "kg"] => :kilogram,
+        ["liters", "liter", "l.", "l"] => :liter,
+        ["milligrams", "milligram", "mg.", "mg"] => :milligram,
+        ["milliliters", "milliliter", "ml.", "ml"] => :milliliter,
+        ["pinches", "pinch"] => :pinch,
+        ["dashes", "dash"] => :dash,
+        ["touches", "touch"] => :touch,
+        ["handfuls", "handful"] => :handful
       }
     end
 
