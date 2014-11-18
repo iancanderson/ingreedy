@@ -45,10 +45,6 @@ module Ingreedy
       str(')').maybe >> whitespace
     end
 
-    rule(:ingredient) do
-      any.repeat
-    end
-
     rule(:unit_and_whitespace) do
       unit.as(:unit) >> whitespace
     end
