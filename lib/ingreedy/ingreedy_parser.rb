@@ -10,7 +10,7 @@ module Ingreedy
   class Parser < Parslet::Parser
 
     attr_reader :original_query
-    Result = Struct.new(:amount, :unit, :ingredient, :original_query)
+    Result = Struct.new(:amount, :unit, :ingredient, :action, :optional, :original_query)
 
     rule(:amount) do
       AmountParser.new.as(:amount)
@@ -53,13 +53,36 @@ module Ingreedy
       unit.as(:unit) >> whitespace
     end
 
+    rule(:of_ingredient) do
+      whitespace | str('of')
+    end
+
+    rule(:optional_instructions) do
+      str('(') >>
+      match('[^)]').repeat.as(:optional) >>
+      str(')') >> whitespace
+    end
+
+    rule(:comma_and_action) do
+      str(',') >>
+      whitespace.maybe >>
+      any.repeat.as(:action)
+    end
+
+    rule(:ingredient_and_action) do
+      match('[^,]').repeat.as(:ingredient) >>
+      comma_and_action.maybe
+    end
+
     rule(:ingredient_addition) do
       # e.g. 1/2 (12 oz) can black beans
+      optional_instructions.maybe >>
       amount >>
       whitespace.maybe >>
       container_size.maybe >>
       unit_and_whitespace.maybe >>
-      ingredient.as(:ingredient)
+      of_ingredient.maybe >>
+      ingredient_and_action
     end
 
     root :ingredient_addition
@@ -81,6 +104,14 @@ module Ingreedy
       end
 
       result[:ingredient] = parslet_output[:ingredient].to_s.lstrip.rstrip #TODO cheating
+
+      if parslet_output[:action]
+        result[:action] = parslet_output[:action]
+      end
+
+      if parslet_output[:optional]
+        result[:optional] = parslet_output[:optional]
+      end
 
       result
     end
