@@ -35,7 +35,7 @@ module Ingreedy
         ["gallons", "gallon", "gal.", "gal"] => :gallon,
         ["ounces", "ounce", "oz.", "oz"] => :ounce,
         ["pints", "pint", "pt.", "pt"] => :pint,
-        ["pounds", "pound", "lb.", "lb"] => :pound,
+        ["pounds", "pound", "lbs.", "lbs", "lb.", "lb"] => :pound,
         ["quarts", "quart", "qts.", "qts", "qt.", "qt"] => :quart,
         ["tablespoons", "tablespoon", "tbsp.", "tbsp", "tbs.", "tbs", "T", "T."] => :tablespoon,
         ["teaspoons", "teaspoon", "tsp.", "tsp", "t", "t."] => :teaspoon,
