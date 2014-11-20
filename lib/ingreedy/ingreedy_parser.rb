@@ -102,11 +102,11 @@ module Ingreedy
       result[:ingredient] = parslet_output[:ingredient].to_s.lstrip.rstrip #TODO cheating
 
       if parslet_output[:action]
-        result[:action] = parslet_output[:action]
+        result[:action] = parslet_output[:action].to_s
       end
 
       if parslet_output[:optional]
-        result[:optional] = parslet_output[:optional]
+        result[:optional] = parslet_output[:optional].to_s
       end
 
       result
