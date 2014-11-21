@@ -290,3 +290,19 @@ describe "with of before ingredient" do
     @ingreedy.ingredient.should == "potatoes"
   end
 end
+
+describe "ingredient without amount or units" do
+  before(:all) { @ingreedy = Ingreedy.parse "salt + pepper to taste" }
+
+  it "should have a nil amount" do
+    @ingreedy.amount.should be_nil
+  end
+
+  it "should have a nil unit" do
+    @ingreedy.unit.should be_nil
+  end
+
+  it "should have the correct ingredient" do
+    @ingreedy.ingredient.should == "salt + pepper to taste"
+  end
+end

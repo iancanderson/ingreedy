@@ -73,7 +73,7 @@ module Ingreedy
     rule(:ingredient_addition) do
       # e.g. 1/2 (12 oz) can black beans
       optional_instructions.maybe >>
-      amount >>
+      amount.maybe >>
       whitespace.maybe >>
       container_size.maybe >>
       unit_and_whitespace.maybe >>
@@ -93,7 +93,9 @@ module Ingreedy
 
       parslet_output = super(original_query)
 
-      result[:amount] = rationalize_total_amount(parslet_output[:amount], parslet_output[:container_amount])
+      if (maybe_amount = rationalize_total_amount(parslet_output[:amount], parslet_output[:container_amount]))
+        result[:amount] = maybe_amount
+      end
 
       if parslet_output[:unit]
         result[:unit] = convert_unit_variation_to_canonical(parslet_output[:unit].to_s)
@@ -127,6 +129,7 @@ module Ingreedy
     end
 
     def rationalize_amount(amount, capture_key_prefix = '')
+      return nil unless amount
       integer = amount["#{capture_key_prefix}integer_amount".to_sym]
       integer &&= integer.to_s
 
