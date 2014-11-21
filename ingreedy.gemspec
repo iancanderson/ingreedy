@@ -3,7 +3,7 @@ require File.expand_path('../lib/ingreedy/version', __FILE__)
 Gem::Specification.new do |s|
  s.name        = "ingreedy"
  s.version     = Ingreedy::VERSION
- s.authors     = ["Ian C. Anderson"]
+ s.authors     = ["Ian C. Anderson", "Torgny Bjers"]
  s.email       = ["anderson.ian.c@gmail.com"]
 
  s.summary     = "Recipe parser"

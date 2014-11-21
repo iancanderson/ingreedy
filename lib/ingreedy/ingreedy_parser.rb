@@ -10,7 +10,7 @@ module Ingreedy
   class Parser < Parslet::Parser
 
     attr_reader :original_query
-    Result = Struct.new(:amount, :unit, :ingredient, :original_query)
+    Result = Struct.new(:amount, :unit, :ingredient, :action, :optional, :original_query)
 
     rule(:amount) do
       AmountParser.new.as(:amount)
@@ -45,21 +45,40 @@ module Ingreedy
       str(')').maybe >> whitespace
     end
 
-    rule(:ingredient) do
-      any.repeat
-    end
-
     rule(:unit_and_whitespace) do
       unit.as(:unit) >> whitespace
     end
 
+    rule(:of_ingredient) do
+      whitespace | str('of')
+    end
+
+    rule(:optional_instructions) do
+      str('(') >>
+      match('[^)]').repeat.as(:optional) >>
+      str(')') >> whitespace
+    end
+
+    rule(:comma_and_action) do
+      str(',') >>
+      whitespace.maybe >>
+      any.repeat.as(:action)
+    end
+
+    rule(:ingredient_and_action) do
+      match('[^,]').repeat.as(:ingredient) >>
+      comma_and_action.maybe
+    end
+
     rule(:ingredient_addition) do
       # e.g. 1/2 (12 oz) can black beans
-      amount >>
+      optional_instructions.maybe >>
+      amount.maybe >>
       whitespace.maybe >>
       container_size.maybe >>
       unit_and_whitespace.maybe >>
-      ingredient.as(:ingredient)
+      of_ingredient.maybe >>
+      ingredient_and_action
     end
 
     root :ingredient_addition
@@ -74,13 +93,23 @@ module Ingreedy
 
       parslet_output = super(original_query)
 
-      result[:amount] = rationalize_total_amount(parslet_output[:amount], parslet_output[:container_amount])
+      if (maybe_amount = rationalize_total_amount(parslet_output[:amount], parslet_output[:container_amount]))
+        result[:amount] = maybe_amount
+      end
 
       if parslet_output[:unit]
         result[:unit] = convert_unit_variation_to_canonical(parslet_output[:unit].to_s)
       end
 
       result[:ingredient] = parslet_output[:ingredient].to_s.lstrip.rstrip #TODO cheating
+
+      if parslet_output[:action]
+        result[:action] = parslet_output[:action].to_s
+      end
+
+      if parslet_output[:optional]
+        result[:optional] = parslet_output[:optional].to_s
+      end
 
       result
     end
@@ -100,6 +129,7 @@ module Ingreedy
     end
 
     def rationalize_amount(amount, capture_key_prefix = '')
+      return nil unless amount
       integer = amount["#{capture_key_prefix}integer_amount".to_sym]
       integer &&= integer.to_s
 

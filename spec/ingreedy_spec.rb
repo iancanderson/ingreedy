@@ -225,12 +225,84 @@ describe "without units" do
   end
 
   it "should have the correct ingredient" do
-    @ingreedy.ingredient.should == "eggs, lightly beaten"
+    @ingreedy.ingredient.should == "eggs"
   end
 end
 
 describe "ingredient formatting" do
   it "should not have any preceding or trailing whitespace" do
     Ingreedy.parse("1 cup flour ").ingredient.should == "flour"
+  end
+end
+
+describe "with leading optional" do
+  before(:all) { @ingreedy = Ingreedy.parse "(optional, if you have it at hand) 3 eggs, lightly beaten" }
+
+  it "should have an amount of 3" do
+    @ingreedy.amount.should == 3
+  end
+
+  it "should have a nil unit" do
+    @ingreedy.unit.should be_nil
+  end
+
+  it "should have the correct ingredient" do
+    @ingreedy.ingredient.should == "eggs"
+  end
+
+  it "should have the correct optional" do
+    @ingreedy.optional.should == "optional, if you have it at hand"
+  end
+end
+
+describe "ingredient with action" do
+  before(:all) { @ingreedy = Ingreedy.parse "3 eggs, lightly beaten" }
+
+  it "should have an amount of 3" do
+    @ingreedy.amount.should == 3
+  end
+
+  it "should have a nil unit" do
+    @ingreedy.unit.should be_nil
+  end
+
+  it "should have the correct ingredient" do
+    @ingreedy.ingredient.should == "eggs"
+  end
+
+  it "should have the correct action" do
+    @ingreedy.action.should == "lightly beaten"
+  end
+end
+
+describe "with of before ingredient" do
+  before(:all) { @ingreedy = Ingreedy.parse "3 cups of potatoes" }
+
+  it "should have an amount of 3" do
+    @ingreedy.amount.should == 3
+  end
+
+  it "should be a cup unit" do
+    @ingreedy.unit.should == :cup
+  end
+
+  it "should have the correct ingredient" do
+    @ingreedy.ingredient.should == "potatoes"
+  end
+end
+
+describe "ingredient without amount or units" do
+  before(:all) { @ingreedy = Ingreedy.parse "salt + pepper to taste" }
+
+  it "should have a nil amount" do
+    @ingreedy.amount.should be_nil
+  end
+
+  it "should have a nil unit" do
+    @ingreedy.unit.should be_nil
+  end
+
+  it "should have the correct ingredient" do
+    @ingreedy.ingredient.should == "salt + pepper to taste"
   end
 end
