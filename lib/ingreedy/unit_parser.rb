@@ -4,12 +4,16 @@ module Ingreedy
     include CaseInsensitiveParser
 
     rule(:unit) do
-      UnitVariationMapper.all_variations.map { |variation|
-        str(variation) | stri(variation)
-      }.reduce(:|)
+      unit_variations.map { |var| str(var) | stri(var) }.reduce(:|)
     end
 
     root :unit
+
+    private
+
+    def unit_variations
+      UnitVariationMapper.all_variations
+    end
 
   end
 

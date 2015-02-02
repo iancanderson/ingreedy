@@ -10,6 +10,26 @@ print result.ingredient
   #=> "potatoes"
 ```
 
+### I18n and custom dictionaries
+
+```ruby
+Ingreedy.dictionaries[:fr] = { 
+  units: { dash: ['pincée'] }, 
+  numbers: { 'une' => 1 }, 
+  prepositions: ['de'] 
+}
+
+Ingreedy.locale = :fr # Also automatically follows I18n.locale if available
+
+result = Ingreedy.parse('une pincée de sucre')
+print result.amount
+  #=> 1.0
+print result.unit
+  #=> :dash
+print result.ingredient
+  #=> "sucre"
+```
+
 [Live demo](http://hangryingreedytest.herokuapp.com/)
 
 # Pieces of Flair

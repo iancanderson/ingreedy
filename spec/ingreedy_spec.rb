@@ -118,16 +118,11 @@ describe "english units" do
     it { should parse 'tbs' }
   end
 
-  context 'unit_and_whitespace rule' do
-    subject { Ingreedy::Parser.new('1 Tbs salt').unit_and_whitespace }
+  context 'unit_and_preposition rule' do
+    subject { Ingreedy::Parser.new('1 pinch of salt').unit_and_preposition }
 
-    it { should parse 'tBS ' }
-    it { should parse 'tBs ' }
-    it { should parse 'tbs ' }
-    it { should parse 'Tbs ' }
-    it { should parse 'TBs ' }
-    it { should parse 'TBS ' }
     it { should parse 'pInch ' }
+    it { should parse 'pinch of ' }
   end
 
   context "long form" do
@@ -205,7 +200,10 @@ describe "nonstandard units" do
     "1 touch hot sauce" => :touch,
     "2 touches hot sauce" => :touch,
     "1 handful rice" => :handful,
-    "2 handfuls rice" => :handful
+    "2 handfuls rice" => :handful,
+    "1 stick of butter" => :stick,
+    "2 cloves of garlic" => :clove,
+    "1 can of tomatoes" => :can
   }.each do |query, expected|
     it "should parse the units correctly" do
       Ingreedy.parse(query).should parse_the_unit(expected)
@@ -226,6 +224,106 @@ describe "without units" do
 
   it "should have the correct ingredient" do
     @ingreedy.ingredient.should == "eggs, lightly beaten"
+  end
+end
+
+
+describe "with 'a' as quantity and preposition 'of'" do
+  before(:all) { @ingreedy = Ingreedy.parse "a dash of ginger" }
+
+  it "should have the correct amount" do
+    @ingreedy.amount.should == 1
+  end
+
+  it "should have the correct unit" do
+    @ingreedy.unit.should == :dash
+  end
+
+  it "should have the correct ingredient" do
+    @ingreedy.ingredient.should == "ginger"
+  end
+end
+
+describe "with 'reverse format'" do
+  before(:all) { @ingreedy = Ingreedy.parse "flour 200g" }
+
+  it "should have the correct amount" do
+    @ingreedy.amount.should == 200
+  end
+
+  it "should have the correct unit" do
+    @ingreedy.unit.should == :gram
+  end
+
+  it "should have the correct ingredient" do
+    @ingreedy.ingredient.should == "flour"
+  end
+end
+
+describe "custom dictionaries" do
+  context "using Ingreedy.locale=" do
+    before(:all) do
+      Ingreedy.dictionaries[:fr] = { units: { dash: ['pincee'] }, numbers: { 'une' => 1 }, prepositions: ['de'] }
+      Ingreedy.locale = :fr
+      @ingreedy = Ingreedy.parse "une pincee de sucre"
+    end
+
+    after(:all) do
+      Ingreedy.locale = nil
+    end
+
+    it "should have the correct amount" do
+      @ingreedy.amount.should == 1
+    end
+
+    it "should have the correct unit" do
+      @ingreedy.unit.should == :dash
+    end
+
+    it "should have the correct ingredient" do
+      @ingreedy.ingredient.should == "sucre"
+    end
+  end
+
+  context "using I18n.locale" do
+    before(:all) do
+      Ingreedy.dictionaries[:de] = { units: { dash: ['prise'] } }
+      RSpec::Mocks::setup(self)
+      stub_const 'I18n', double('I18n', locale: :de)
+      @ingreedy = Ingreedy.parse "1 Prise Zucker"
+    end
+
+    it "should have the correct amount" do
+      @ingreedy.amount.should == 1
+    end
+
+    it "should have the correct unit" do
+      @ingreedy.unit.should == :dash
+    end
+
+    it "should have the correct ingredient" do
+      @ingreedy.ingredient.should == "Zucker"
+    end
+  end
+
+  context "unknown locale" do
+    before(:all) do
+      Ingreedy.locale = :da
+    end
+
+    after(:all) do
+      Ingreedy.locale = nil
+    end
+
+    it "should raise an informative exception" do
+      lambda { Ingreedy.parse "1 tsk salt" }.should raise_exception('No dictionary found for :da locale')
+    end
+  end
+
+  context "Dictionary with no units" do
+    it "should raise an informative exception" do
+      lambda { Ingreedy.dictionaries[:da] = {} }.should raise_exception('No units found in dictionary')
+    end
   end
 end
 

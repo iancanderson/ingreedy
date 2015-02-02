@@ -1,5 +1,3 @@
-require 'numbers_in_words'
-
 module Ingreedy
 
   class Rationalizer
@@ -35,9 +33,7 @@ module Ingreedy
     private
 
     def rationalize_word
-      NumbersInWords::ToNumber.new(
-        @word, NumbersInWords.language
-      ).in_numbers.to_r
+      Ingreedy.dictionaries.current.numbers[@word]
     end
 
   end
