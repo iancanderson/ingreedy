@@ -2,9 +2,10 @@ module Ingreedy
   class Dictionary
     attr_reader :units, :numbers, :prepositions
 
-    def initialize(units: {}, numbers: {}, prepositions: [])
-      @units, @numbers, @prepositions = units, numbers, prepositions
-      raise 'No units found in dictionary' if @units.empty?
+    def initialize(entries = {})
+      @units = entries[:units] || raise('No units found in dictionary')
+      @numbers = entries[:numbers] || {}
+      @prepositions = entries[:prepositions] || []
     end
   end
 end
