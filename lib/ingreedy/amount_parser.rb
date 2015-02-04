@@ -1,5 +1,4 @@
 require 'parslet'
-require 'numbers_in_words'
 
 module Ingreedy
 
@@ -32,27 +31,23 @@ module Ingreedy
       (integer >> match('/') >> integer).as(capture_key(:fraction_amount))
     end
 
-    rule(:english_digit) do
-      english_digits.map { |d| stri(d) }.inject(:|)
+    rule(:word_digit) do
+      word_digits.map { |d| stri(d) }.inject(:|) || any
     end
 
     rule(:amount) do
       fraction |
         float.as(capture_key(:float_amount)) |
         integer.as(capture_key(:integer_amount)) |
-        english_digit.as(capture_key(:word_integer_amount))
+        word_digit.as(capture_key(:word_integer_amount))
     end
 
     root(:amount)
 
     private
 
-    def english_digits
-      (1..12).map do |n|
-        NumbersInWords::ToWord.new(
-          n, NumbersInWords.language
-        ).in_words
-      end
+    def word_digits
+      Ingreedy.dictionaries.current.numbers.keys
     end
 
   end

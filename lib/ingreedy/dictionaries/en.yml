@@ -1,0 +1,135 @@
+:units:
+  :cup:
+    - "cups"
+    - "cup"
+    - "c."
+    - "c"
+  :fluid_ounce:
+    - "fl. oz."
+    - "fl oz"
+    - "fluid ounce"
+    - "fluid ounces"
+  :gallon:
+    - "gal"
+    - "gal."
+    - "gallon"
+    - "gallons"
+  :ounce:
+    - "oz"
+    - "oz."
+    - "ounce"
+    - "ounces"
+  :pint:
+    - "pt"
+    - "pt."
+    - "pint"
+    - "pints"
+  :pound:
+    - "lb"
+    - "lb."
+    - "pound"
+    - "pounds"
+  :quart:
+    - "qt"
+    - "qt."
+    - "qts"
+    - "qts."
+    - "quart"
+    - "quarts"
+  :tablespoon:
+    - "tbsp."
+    - "tbsp"
+    - "T"
+    - "T."
+    - "tablespoon"
+    - "tablespoons"
+    - "tbs."
+    - "tbs"
+  :teaspoon:
+    - "tsp."
+    - "tsp"
+    - "t"
+    - "t."
+    - "teaspoon"
+    - "teaspoons"
+  :gram:
+    - "g"
+    - "g."
+    - "gr"
+    - "gr."
+    - "gram"
+    - "grams"
+  :kilogram:
+    - "kg"
+    - "kg."
+    - "kilogram"
+    - "kilograms"
+  :liter:
+    - "l"
+    - "l."
+    - "liter"
+    - "liters"
+  :milligram:
+    - "mg"
+    - "mg."
+    - "milligram"
+    - "milligrams"
+  :milliliter:
+    - "ml"
+    - "ml."
+    - "milliliter"
+    - "milliliters"
+  :pinch:
+    - "pinch"
+    - "pinches"
+  :dash:
+    - "dash"
+    - "dashes"
+  :touch:
+    - "touch"
+    - "touches"
+  :handful:
+    - "handful"
+    - "handfuls"
+  :stick:
+    - "stick"
+    - "sticks"
+  :clove:
+    - "cloves"
+    - "clove"
+  :can:
+    - "cans"
+    - "can"
+:numbers:
+  a: 1
+  an: 1
+  zero: 0
+  one: 1
+  two: 2
+  three: 3
+  four: 4
+  five: 5
+  six: 6
+  seven: 7
+  eight: 8
+  nine: 9
+  ten: 10
+  eleven: 11
+  twelve: 12
+  thirteen: 13
+  fourteen: 14
+  fifteen: 15
+  sixteen: 16
+  seventeen: 17
+  eighteen: 18
+  nineteen: 19
+  twenty: 20
+  thirty: 30
+  forty: 40
+  fifty: 50
+  sixty: 60
+  seventy: 70
+  eighty: 80
+  ninety: 9
+:prepositions:
+  - "of"

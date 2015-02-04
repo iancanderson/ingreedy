@@ -28,6 +28,20 @@ module Ingreedy
       UnitParser.new
     end
 
+    rule(:unit_and_preposition) do
+      unit.as(:unit) >> (preposition | whitespace | any.absent?)
+    end
+
+    rule(:preposition) do
+      if prepositions.empty?
+        any
+      else
+        whitespace >>
+        prepositions.map { |con| str(con) }.inject(:|) >>
+        whitespace
+      end
+    end
+
     rule(:container_unit) do
       UnitParser.new
     end
@@ -45,21 +59,25 @@ module Ingreedy
       str(')').maybe >> whitespace
     end
 
-    rule(:ingredient) do
-      any.repeat
+    rule(:amount_and_unit) do
+      amount >>
+      whitespace.maybe >>
+      unit_and_preposition.maybe >>
+      container_size.maybe
     end
 
-    rule(:unit_and_whitespace) do
-      unit.as(:unit) >> whitespace
+    rule(:standard_format) do
+      # e.g. 1/2 (12 oz) can black beans
+      amount_and_unit >> any.repeat.as(:ingredient)
+    end
+
+    rule(:reverse_format) do
+      # e.g. flour 200g
+      (amount.absent? >> any).repeat.as(:ingredient) >> amount_and_unit
     end
 
     rule(:ingredient_addition) do
-      # e.g. 1/2 (12 oz) can black beans
-      amount >>
-      whitespace.maybe >>
-      container_size.maybe >>
-      unit_and_whitespace.maybe >>
-      ingredient.as(:ingredient)
+      standard_format | reverse_format
     end
 
     root :ingredient_addition
@@ -86,6 +104,10 @@ module Ingreedy
     end
 
     private
+
+    def prepositions
+      Ingreedy.dictionaries.current.prepositions
+    end
 
     def convert_unit_variation_to_canonical(unit_variation)
       UnitVariationMapper.unit_from_variation(unit_variation)
