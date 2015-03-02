@@ -36,7 +36,7 @@ describe Ingreedy::Rationalizer do
   context 'with the word a or an' do
     it 'gives back a rational' do
       subject.rationalize(word: 'a').should == '1'.to_r
-      subject.rationalize(word: 'an').should == '1'.to_r
+      subject.rationalize(word: 'AN').should == '1'.to_r
     end
   end
 

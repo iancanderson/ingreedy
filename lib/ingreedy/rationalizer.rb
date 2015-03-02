@@ -33,7 +33,7 @@ module Ingreedy
     private
 
     def rationalize_word
-      Ingreedy.dictionaries.current.numbers[@word]
+      Ingreedy.dictionaries.current.numbers[@word.downcase]
     end
 
   end
