@@ -66,15 +66,19 @@ module Ingreedy
       container_size.maybe
     end
 
+    rule(:quantity) do
+      amount_and_unit | unit_and_preposition
+    end
+
     rule(:standard_format) do
       # (word_digit || number) >> unit_and_preposition >> ingredients
       # e.g. 1/2 (12 oz) can black beans
-      amount_and_unit >> any.repeat.as(:ingredient)
+      quantity >> any.repeat.as(:ingredient)
     end
 
     rule(:reverse_format) do
       # e.g. flour 200g
-      ((whitespace >> amount_and_unit).absent? >> any).repeat.as(:ingredient) >> whitespace >> amount_and_unit
+      ((whitespace >> quantity).absent? >> any).repeat.as(:ingredient) >> whitespace >> quantity
     end
 
     rule(:ingredient_addition) do
@@ -123,6 +127,7 @@ module Ingreedy
     end
 
     def rationalize_amount(amount, capture_key_prefix = '')
+      return unless amount
       integer = amount["#{capture_key_prefix}integer_amount".to_sym]
       integer &&= integer.to_s
 
