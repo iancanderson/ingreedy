@@ -245,18 +245,18 @@ describe "with 'a' as quantity and preposition 'of'" do
 end
 
 describe "with 'reverse format'" do
-  before(:all) { @ingreedy = Ingreedy.parse "salt 200g" }
-
-  it "should have the correct amount" do
+  it "should work with words containing a 'word digit'" do
+    @ingreedy = Ingreedy.parse "salt 200g"
     @ingreedy.amount.should == 200
-  end
-
-  it "should have the correct unit" do
     @ingreedy.unit.should == :gram
+    @ingreedy.ingredient.should == "salt"
   end
 
-  it "should have the correct ingredient" do
-    @ingreedy.ingredient.should == "salt"
+  it "should work with words ending on a 'word digit'" do
+    @ingreedy = Ingreedy.parse "quinoa 200g"
+    @ingreedy.amount.should == 200
+    @ingreedy.unit.should == :gram
+    @ingreedy.ingredient.should == "quinoa"
   end
 end
 

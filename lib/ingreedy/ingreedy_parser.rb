@@ -67,13 +67,14 @@ module Ingreedy
     end
 
     rule(:standard_format) do
+      # (word_digit || number) >> unit_and_preposition >> ingredients
       # e.g. 1/2 (12 oz) can black beans
       amount_and_unit >> any.repeat.as(:ingredient)
     end
 
     rule(:reverse_format) do
       # e.g. flour 200g
-      (amount.absent? >> any).repeat.as(:ingredient) >> amount_and_unit
+      ((whitespace >> amount_and_unit).absent? >> any).repeat.as(:ingredient) >> whitespace >> amount_and_unit
     end
 
     rule(:ingredient_addition) do
