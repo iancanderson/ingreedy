@@ -258,6 +258,13 @@ describe "with 'reverse format'" do
     @ingreedy.unit.should == :gram
     @ingreedy.ingredient.should == "quinoa"
   end
+
+  it "should work with approximate quantities" do
+    @ingreedy = Ingreedy.parse "salt to taste"
+    @ingreedy.ingredient.should == "salt"
+    @ingreedy.amount.should be_nil
+    @ingreedy.unit.should == :to_taste
+  end
 end
 
 describe "custom dictionaries" do
