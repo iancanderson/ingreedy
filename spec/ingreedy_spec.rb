@@ -245,7 +245,7 @@ describe "with 'a' as quantity and preposition 'of'" do
 end
 
 describe "with 'reverse format'" do
-  before(:all) { @ingreedy = Ingreedy.parse "flour 200g" }
+  before(:all) { @ingreedy = Ingreedy.parse "salt 200g" }
 
   it "should have the correct amount" do
     @ingreedy.amount.should == 200
@@ -256,7 +256,7 @@ describe "with 'reverse format'" do
   end
 
   it "should have the correct ingredient" do
-    @ingreedy.ingredient.should == "flour"
+    @ingreedy.ingredient.should == "salt"
   end
 end
 

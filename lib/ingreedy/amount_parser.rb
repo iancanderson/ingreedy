@@ -35,11 +35,15 @@ module Ingreedy
       word_digits.map { |d| stri(d) }.inject(:|) || any
     end
 
+    rule(:amount_unit_separator) do
+      whitespace | str('-')
+    end
+
     rule(:amount) do
       fraction |
         float.as(capture_key(:float_amount)) |
         integer.as(capture_key(:integer_amount)) |
-        word_digit.as(capture_key(:word_integer_amount))
+        word_digit.as(capture_key(:word_integer_amount)) >> amount_unit_separator
     end
 
     root(:amount)
