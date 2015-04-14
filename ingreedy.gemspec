@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
  s.description = "Natural language recipe ingredient parser that supports numeric amount, units, and ingredient"
  s.homepage    = "http://github.com/iancanderson/ingreedy"
 
- s.add_dependency 'parslet', '~> 1.5.0'
+ s.add_dependency 'parslet', '~> 1.7.0'
 
  s.add_development_dependency 'rake', '~> 0.9'
  s.add_development_dependency 'rspec', '~> 2.11.0'
