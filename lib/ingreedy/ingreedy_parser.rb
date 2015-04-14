@@ -54,7 +54,7 @@ module Ingreedy
       # e.g. (12 ounce) or 12 ounce
       str('(').maybe >>
       container_amount.as(:container_amount) >>
-      amount_unit_separator >>
+      amount_unit_separator.maybe >>
       container_unit.as(:unit) >>
       str(')').maybe >> whitespace
     end
