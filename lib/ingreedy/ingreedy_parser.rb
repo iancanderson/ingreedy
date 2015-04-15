@@ -29,17 +29,17 @@ module Ingreedy
     end
 
     rule(:unit_and_preposition) do
-      unit.as(:unit) >> (preposition | whitespace | any.absent?)
+      if prepositions.empty?
+        unit.as(:unit) >> (whitespace | any.absent?)
+      else
+        unit.as(:unit) >> (preposition | whitespace | any.absent?)
+      end
     end
 
     rule(:preposition) do
-      if prepositions.empty?
-        any
-      else
-        whitespace >>
-        prepositions.map { |con| str(con) }.inject(:|) >>
-        whitespace
-      end
+      whitespace >>
+      prepositions.map { |con| str(con) }.inject(:|) >>
+      whitespace
     end
 
     rule(:container_unit) do
@@ -71,7 +71,6 @@ module Ingreedy
     end
 
     rule(:standard_format) do
-      # (word_digit || number) >> unit_and_preposition >> ingredients
       # e.g. 1/2 (12 oz) can black beans
       quantity >> any.repeat.as(:ingredient)
     end

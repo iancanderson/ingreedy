@@ -227,7 +227,6 @@ describe "without units" do
   end
 end
 
-
 describe "with 'a' as quantity and preposition 'of'" do
   before(:all) { @ingreedy = Ingreedy.parse "a dash of ginger" }
 
@@ -266,6 +265,31 @@ describe "with 'reverse format'" do
     @ingreedy.unit.should == :to_taste
   end
 end
+
+describe "parsing in language with no prepositions" do
+  before(:all) do
+    Ingreedy.dictionaries[:id] = { units: { to_taste: ['secukupnya'], gram: ['g'] } }
+    Ingreedy.locale = :id
+    @ingreedy = Ingreedy.parse "garam secukupnya"
+  end
+
+  after(:all) do
+    Ingreedy.locale = nil
+  end
+
+  it "should have a nil amount" do
+    @ingreedy.amount.should be_nil
+  end
+
+  it "should have the correct  unit" do
+    @ingreedy.unit.should == :to_taste
+  end
+
+  it "should have the correct ingredient" do
+    @ingreedy.ingredient.should == "garam"
+  end
+end
+
 
 describe "custom dictionaries" do
   context "using Ingreedy.locale=" do
