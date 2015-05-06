@@ -2,7 +2,6 @@ require 'parslet'
 
 require_relative 'amount_parser'
 require_relative 'rationalizer'
-require_relative 'unit_parser'
 require_relative 'unit_variation_mapper'
 
 module Ingreedy
@@ -25,7 +24,15 @@ module Ingreedy
     end
 
     rule(:unit) do
-      UnitParser.new
+      if unit_matches.any?
+        unit_matches.map { |u| str(u) }.inject(:|)
+      else
+        str('')
+      end
+    end
+
+    rule(:container_unit) do
+      unit
     end
 
     rule(:unit_and_preposition) do
@@ -40,10 +47,6 @@ module Ingreedy
       whitespace >>
       prepositions.map { |con| str(con) }.inject(:|) >>
       whitespace
-    end
-
-    rule(:container_unit) do
-      UnitParser.new
     end
 
     rule(:amount_unit_separator) do
@@ -108,6 +111,10 @@ module Ingreedy
     end
 
     private
+
+    def unit_matches
+      @unit_matches ||= original_query.scan(UnitVariationMapper.regexp).sort_by(&:length).reverse
+    end
 
     def prepositions
       Ingreedy.dictionaries.current.prepositions

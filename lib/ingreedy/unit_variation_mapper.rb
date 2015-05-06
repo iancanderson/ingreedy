@@ -1,6 +1,11 @@
 module Ingreedy
   class UnitVariationMapper
 
+    def self.regexp
+      regexp = all_variations.map { |v| Regexp.escape(v) }.join('|')
+      regexp = Regexp.new(regexp, Regexp::IGNORECASE)
+    end
+
     def self.all_variations
       # Return these in order of size, descending
       # That way, the longer versions will try to be parsed first, then the shorter versions
