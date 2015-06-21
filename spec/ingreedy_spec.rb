@@ -11,6 +11,7 @@ describe Ingreedy do
       "1 1/2 cups flour" => '3/2',
       "1.0 cup flour" => 1,
       "1.5 cups flour" => '3/2',
+      "1,5 cups flour" => '3/2',
       "1 2/3 cups flour" => '5/3',
       "1 (28 ounce) can crushed tomatoes" => 28,
       "2 (28 ounce) can crushed tomatoes" => 56,

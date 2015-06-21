@@ -65,6 +65,14 @@ describe Ingreedy::AmountParser do
       expect(result[:integer_amount]).to  eq(nil)
     end
 
+    it 'should capture a european style float' do
+      result = subject.parse('3,14')
+
+      result[:float_amount].should    == '3,14'
+      result[:fraction_amount].should == nil
+      result[:integer_amount].should  == nil
+    end
+
   end
 
   context 'integers' do

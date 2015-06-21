@@ -27,6 +27,12 @@ describe Ingreedy::Rationalizer do
     end
   end
 
+  context 'with a european float' do
+    it 'should give back a rational' do
+      subject.rationalize(float: '0,4').should == '4/10'.to_r
+    end
+  end
+
   context 'with an english digit' do
     it 'gives back a rational' do
       expect(subject.rationalize(word: 'one')).to eq('1'.to_r)

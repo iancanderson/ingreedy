@@ -23,7 +23,11 @@ module Ingreedy
 
     rule(:float) do
       integer.maybe >>
-      str('.') >> integer
+      float_delimiter >> integer
+    end
+
+    rule(:float_delimiter) do
+      str(',') | str('.')
     end
 
     rule(:fraction) do

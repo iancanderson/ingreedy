@@ -24,7 +24,7 @@ module Ingreedy
       elsif @integer
         result = @integer.to_r
       elsif @float
-        result = @float.to_r
+        result = @float.gsub(',', '.').to_r
       end
 
       result
