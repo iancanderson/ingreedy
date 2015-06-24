@@ -9,7 +9,7 @@ module Ingreedy
   class Parser < Parslet::Parser
 
     attr_reader :original_query
-    Result = Struct.new(:amount, :unit, :ingredient, :original_query)
+    Result = Struct.new(:amount, :unit, :container_amount, :container_unit, :ingredient, :original_query)
 
     rule(:amount) do
       AmountParser.new.as(:amount)
@@ -58,8 +58,8 @@ module Ingreedy
       str('(').maybe >>
       container_amount.as(:container_amount) >>
       amount_unit_separator.maybe >>
-      container_unit.as(:unit) >>
-      str(')').maybe >> whitespace
+      container_unit.as(:container_unit) >>
+      str(')').maybe >> (preposition | whitespace)
     end
 
     rule(:amount_and_unit) do
@@ -99,11 +99,11 @@ module Ingreedy
 
       parslet_output = super(original_query)
 
-      result[:amount] = rationalize_total_amount(parslet_output[:amount], parslet_output[:container_amount])
+      result[:amount] = rationalize_amount(parslet_output[:amount])
+      result[:container_amount] = rationalize_amount(parslet_output[:container_amount], 'container_')
 
-      if parslet_output[:unit]
-        result[:unit] = convert_unit_variation_to_canonical(parslet_output[:unit].to_s)
-      end
+      result[:unit] = convert_unit_variation_to_canonical(parslet_output[:unit].to_s) if parslet_output[:unit]
+      result[:container_unit] = convert_unit_variation_to_canonical(parslet_output[:container_unit].to_s) if parslet_output[:container_unit]
 
       result[:ingredient] = parslet_output[:ingredient].to_s.lstrip.rstrip #TODO cheating
 
@@ -122,14 +122,6 @@ module Ingreedy
 
     def convert_unit_variation_to_canonical(unit_variation)
       UnitVariationMapper.unit_from_variation(unit_variation)
-    end
-
-    def rationalize_total_amount(amount, container_amount)
-      if container_amount
-        rationalize_amount(amount) * rationalize_amount(container_amount, 'container_')
-      else
-        rationalize_amount(amount)
-      end
     end
 
     def rationalize_amount(amount, capture_key_prefix = '')

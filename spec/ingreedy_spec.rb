@@ -13,13 +13,13 @@ describe Ingreedy do
       "1.5 cups flour" => '3/2',
       "1,5 cups flour" => '3/2',
       "1 2/3 cups flour" => '5/3',
-      "1 (28 ounce) can crushed tomatoes" => 28,
-      "2 (28 ounce) can crushed tomatoes" => 56,
-      "3 28 ounce can crushed tomatoes" => 84,
-      "one 28 ounce can crushed tomatoes" => 28,
-      "two five-ounce can crushed tomatoes" => 10,
-      "two 28 ounce cans crushed tomatoes" => 56,
-      "three 28 ounce cans crushed tomatoes" => 84,
+      "1 (28 ounce) can crushed tomatoes" => 1,
+      "2 (28 ounce) can crushed tomatoes" => 2,
+      "3 28 ounce can crushed tomatoes" => 3,
+      "one 28 ounce can crushed tomatoes" => 1,
+      "two five-ounce can crushed tomatoes" => 2,
+      "two 28 ounce cans crushed tomatoes" => 2,
+      "three 28 ounce cans crushed tomatoes" => 3,
       "1/2 cups flour" => '1/2',
       ".25 cups flour" => '1/4',
       "12oz tequila" => 12,
@@ -67,7 +67,6 @@ describe "english units" do
       "1 c. flour" => :cup,
       "1 fl oz flour" => :fluid_ounce,
       "1 fl. oz. flour" => :fluid_ounce,
-      "1 (28 fl oz) can crushed tomatoes" => :fluid_ounce,
       "2 gal flour" => :gallon,
       "2 gal. flour" => :gallon,
       "1 ounce flour" => :ounce,
@@ -206,6 +205,30 @@ describe "without units" do
 
   it "should have the correct ingredient" do
     expect(@ingreedy.ingredient).to eq("eggs, lightly beaten")
+  end
+end
+
+describe 'container as part of quantity' do
+  before(:all) { @ingreedy = Ingreedy.parse "160g (2 cans) of tomatoes" }
+
+  it "should have correct amount" do
+    @ingreedy.amount.should == 160
+  end
+
+  it "should have a the correct unit" do
+    @ingreedy.unit.should == :gram
+  end
+
+  it 'should have correct container amount' do
+    @ingreedy.container_amount.should == 2
+  end
+
+  it 'should have correct container unit' do
+    @ingreedy.container_unit.should == :can
+  end
+
+  it "should have the correct ingredient" do
+    @ingreedy.ingredient.should == "tomatoes"
   end
 end
 
