@@ -211,19 +211,19 @@ end
 describe 'container as part of quantity' do
   before(:all) { @ingreedy = Ingreedy.parse "160g (2 cans) of tomatoes" }
 
-  it "should have correct amount" do
+  it "should have the correct amount" do
     @ingreedy.amount.should == 160
   end
 
-  it "should have a the correct unit" do
+  it "should the have correct unit" do
     @ingreedy.unit.should == :gram
   end
 
-  it 'should have correct container amount' do
+  it 'should have the correct container amount' do
     @ingreedy.container_amount.should == 2
   end
 
-  it 'should have correct container unit' do
+  it 'should have the correct container unit' do
     @ingreedy.container_unit.should == :can
   end
 
