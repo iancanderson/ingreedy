@@ -1,7 +1,5 @@
 module Ingreedy
-
   class Rationalizer
-
     def self.rationalize(options)
       new(options).rationalize
     end
@@ -17,7 +15,7 @@ module Ingreedy
       if @word
         result = rationalize_word
       elsif @fraction
-        result = @fraction.to_r
+        result = rationalize_fraction
         if @integer
           result += @integer.to_i
         end
@@ -32,10 +30,17 @@ module Ingreedy
 
     private
 
-    def rationalize_word
-      Ingreedy.dictionaries.current.numbers[@word.downcase]
-    end
+      def rationalize_fraction
+        vulgar_fractions.each { |char, amount| @fraction.gsub!(char, amount.to_s) }
+        @fraction.to_r
+      end
 
+      def vulgar_fractions
+        Ingreedy.dictionaries.current.vulgar_fractions
+      end
+
+      def rationalize_word
+        Ingreedy.dictionaries.current.numbers[@word.downcase]
+      end
   end
-
 end

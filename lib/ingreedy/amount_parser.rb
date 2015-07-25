@@ -31,8 +31,25 @@ module Ingreedy
     end
 
     rule(:fraction) do
+      compound_simple_fraction | compound_vulgar_fraction
+    end
+
+    rule(:compound_simple_fraction) do
       (integer.as(capture_key(:integer_amount)) >> whitespace).maybe >>
-      (integer >> match('/') >> integer).as(capture_key(:fraction_amount))
+      simple_fraction.as(capture_key(:fraction_amount))
+    end
+
+    rule(:simple_fraction) do
+      integer >> match('/') >> integer
+    end
+
+    rule(:compound_vulgar_fraction) do
+      (integer.as(capture_key(:integer_amount)) >> whitespace.maybe).maybe >>
+      vulgar_fraction.as(capture_key(:fraction_amount))
+    end
+
+    rule(:vulgar_fraction) do
+      vulgar_fractions.map { |f| str(f) }.inject(:|)
     end
 
     rule(:word_digit) do
@@ -54,11 +71,12 @@ module Ingreedy
 
     private
 
-    def word_digits
-      Ingreedy.dictionaries.current.numbers.keys
-    end
+      def word_digits
+        Ingreedy.dictionaries.current.numbers.keys
+      end
 
+      def vulgar_fractions
+        Ingreedy.dictionaries.current.vulgar_fractions.keys
+      end
   end
-
-
 end

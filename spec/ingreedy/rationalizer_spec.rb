@@ -15,6 +15,12 @@ describe Ingreedy::Rationalizer do
     end
   end
 
+  context 'with a vulgar fraction' do
+    it 'should give back a rational' do
+      subject.rationalize(fraction: '¼').should == '1/4'.to_r
+    end
+  end
+
   context 'with an integer' do
     it 'should give back a rational' do
       expect(subject.rationalize(integer: '2')).to eq('2'.to_r)

@@ -21,6 +21,10 @@ describe Ingreedy::AmountParser do
       expect(subject).to parse('1/2')
     end
 
+    it 'should parse vulgar fractions' do
+      subject.should parse('½')
+    end
+
     it 'should capture a fraction' do
       result = subject.parse('1/2')
 
