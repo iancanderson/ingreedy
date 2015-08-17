@@ -59,7 +59,7 @@ module Ingreedy
       container_amount.as(:container_amount) >>
       amount_unit_separator.maybe >>
       container_unit.as(:container_unit) >>
-      str(')').maybe >> (preposition | whitespace)
+      str(')').maybe >> (unit_and_preposition | whitespace)
     end
 
     rule(:amount_and_unit) do
