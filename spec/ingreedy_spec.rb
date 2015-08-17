@@ -233,6 +233,34 @@ describe 'container as part of quantity' do
   it "should have the correct ingredient" do
     @ingreedy.ingredient.should == "tomatoes"
   end
+
+  context 'on language without preposition' do
+    before(:all) do
+      Ingreedy.dictionaries[:id] = { units: { to_taste: ['secukupnya'], gram: ['g'], can: ['kaleng'] } }
+      Ingreedy.locale = :id
+      @ingreedy = Ingreedy.parse "160g (2 kaleng) tomat"
+    end
+
+    it "should have the correct amount" do
+      @ingreedy.amount.should == 160
+    end
+
+    it "should the have correct unit" do
+      @ingreedy.unit.should == :gram
+    end
+
+    it 'should have the correct container amount' do
+      @ingreedy.container_amount.should == 2
+    end
+
+    it 'should have the correct container unit' do
+      @ingreedy.container_unit.should == :can
+    end
+
+    it "should have the correct ingredient" do
+      @ingreedy.ingredient.should == "tomat"
+    end
+  end
 end
 
 describe "with 'a' as quantity and preposition 'of'" do
