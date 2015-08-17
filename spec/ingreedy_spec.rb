@@ -241,6 +241,10 @@ describe 'container as part of quantity' do
       @ingreedy = Ingreedy.parse "160g (2 kaleng) tomat"
     end
 
+    after(:all) do
+      Ingreedy.locale = nil
+    end
+
     it "should have the correct amount" do
       @ingreedy.amount.should == 160
     end
