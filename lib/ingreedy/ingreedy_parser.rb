@@ -36,10 +36,14 @@ module Ingreedy
     end
 
     rule(:unit_and_preposition) do
+      unit.as(:unit) >> (preposition_or_whitespace | any.absent?)
+    end
+
+    rule(:preposition_or_whitespace) do
       if prepositions.empty?
-        unit.as(:unit) >> (whitespace | any.absent?)
+        whitespace
       else
-        unit.as(:unit) >> (preposition | whitespace | any.absent?)
+        preposition | whitespace
       end
     end
 
@@ -59,12 +63,7 @@ module Ingreedy
       container_amount.as(:container_amount) >>
       amount_unit_separator.maybe >>
       container_unit.as(:container_unit) >>
-      str(')').maybe >>
-      if prepositions.empty?
-        (whitespace)
-      else
-        (preposition | whitespace)
-      end
+      str(')').maybe >> preposition_or_whitespace
     end
 
     rule(:amount_and_unit) do
