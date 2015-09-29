@@ -306,6 +306,22 @@ describe "with 'reverse format'" do
   end
 end
 
+describe "Given a range" do
+  it "works with simple ranges" do
+    @ingreedy = Ingreedy.parse "1-2 tbsp salt"
+    @ingreedy.amount.should == [1, 2]
+    @ingreedy.unit.should == :tablespoon
+    @ingreedy.ingredient.should == "salt"
+  end
+
+  it "works with spaces" do
+    @ingreedy = Ingreedy.parse "1 - 2 tbsp salt"
+    @ingreedy.amount.should == [1, 2]
+    @ingreedy.unit.should == :tablespoon
+    @ingreedy.ingredient.should == "salt"
+  end
+end
+
 describe "parsing in language with no prepositions" do
   before(:all) do
     Ingreedy.dictionaries[:id] = { units: { to_taste: ['secukupnya'], gram: ['g'] } }

@@ -11,6 +11,14 @@ module Ingreedy
     attr_reader :original_query
     Result = Struct.new(:amount, :unit, :container_amount, :container_unit, :ingredient, :original_query)
 
+    rule(:range) do
+      AmountParser.new.as(:amount) >>
+      whitespace.maybe >>
+      str('-') >>
+      whitespace.maybe >>
+      AmountParser.new.as(:amount_end)
+    end
+
     rule(:amount) do
       AmountParser.new.as(:amount)
     end
@@ -20,7 +28,7 @@ module Ingreedy
     end
 
     rule(:container_amount) do
-      AmountParser.new(key_prefix: 'container')
+      AmountParser.new
     end
 
     rule(:unit) do
@@ -67,7 +75,7 @@ module Ingreedy
     end
 
     rule(:amount_and_unit) do
-      amount >>
+      (range | amount) >>
       whitespace.maybe >>
       unit_and_preposition.maybe >>
       container_size.maybe
@@ -101,15 +109,16 @@ module Ingreedy
       result = Result.new
       result[:original_query] = original_query
 
-      parslet_output = super(original_query)
+      parslet = super(original_query)
 
-      result[:amount] = rationalize_amount(parslet_output[:amount])
-      result[:container_amount] = rationalize_amount(parslet_output[:container_amount], 'container_')
+      result[:amount] = rationalize parslet[:amount]
+      result[:amount] = [result[:amount], rationalize(parslet[:amount_end])] if parslet[:amount_end]
+      result[:container_amount] = rationalize(parslet[:container_amount])
 
-      result[:unit] = convert_unit_variation_to_canonical(parslet_output[:unit].to_s) if parslet_output[:unit]
-      result[:container_unit] = convert_unit_variation_to_canonical(parslet_output[:container_unit].to_s) if parslet_output[:container_unit]
+      result[:unit] = convert_unit_variation_to_canonical(parslet[:unit].to_s) if parslet[:unit]
+      result[:container_unit] = convert_unit_variation_to_canonical(parslet[:container_unit].to_s) if parslet[:container_unit]
 
-      result[:ingredient] = parslet_output[:ingredient].to_s.lstrip.rstrip #TODO cheating
+      result[:ingredient] = parslet[:ingredient].to_s.lstrip.rstrip #TODO cheating
 
       result
     end
@@ -128,18 +137,18 @@ module Ingreedy
       UnitVariationMapper.unit_from_variation(unit_variation)
     end
 
-    def rationalize_amount(amount, capture_key_prefix = '')
+    def rationalize(amount)
       return unless amount
-      integer = amount["#{capture_key_prefix}integer_amount".to_sym]
+      integer = amount[:integer_amount]
       integer &&= integer.to_s
 
-      float = amount["#{capture_key_prefix}float_amount".to_sym]
+      float = amount[:float_amount]
       float &&= float.to_s
 
-      fraction = amount["#{capture_key_prefix}fraction_amount".to_sym]
+      fraction = amount[:fraction_amount]
       fraction &&= fraction.to_s
 
-      word = amount["#{capture_key_prefix}word_integer_amount".to_sym]
+      word = amount[:word_integer_amount]
       word &&= word.to_s
 
       Rationalizer.rationalize(
@@ -149,6 +158,5 @@ module Ingreedy
         word:     word
       )
     end
-
   end
 end
