@@ -317,9 +317,8 @@ describe "custom dictionaries" do
   end
 
   context "using I18n.locale" do
-    before(:all) do
+    before(:each) do
       Ingreedy.dictionaries[:de] = { units: { dash: ['prise'] } }
-      RSpec::Mocks::setup(self)
       stub_const 'I18n', double('I18n', locale: :de)
       @ingreedy = Ingreedy.parse "1 Prise Zucker"
     end
