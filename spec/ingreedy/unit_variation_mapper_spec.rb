@@ -7,7 +7,7 @@ describe Ingreedy::UnitVariationMapper do
 
     context 'uppercased variation' do
       it 'should give back the correct unit as a symbol' do
-        subject.unit_from_variation('TSP').should == :teaspoon
+        expect(subject.unit_from_variation('TSP')).to eq(:teaspoon)
       end
     end
 

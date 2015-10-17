@@ -6,11 +6,11 @@ describe Ingreedy::AmountParser do
     %w|one two three four five six seven eight nine ten eleven twelve|.each do |word|
       word += ' '
       it %Q|parses a lowercase "#{word}" followed by space| do
-        subject.should parse(word )
+        expect(subject).to parse(word )
       end
 
       it %Q|parses a uppercase "#{word}"| do
-        subject.should parse(word.upcase)
+        expect(subject).to parse(word.upcase)
       end
     end
   end
@@ -18,15 +18,15 @@ describe Ingreedy::AmountParser do
   context 'simple fractions' do
 
     it 'should parse' do
-      subject.should parse('1/2')
+      expect(subject).to parse('1/2')
     end
 
     it 'should capture a fraction' do
       result = subject.parse('1/2')
 
-      result[:float_amount].should    == nil
-      result[:fraction_amount].should == '1/2'
-      result[:integer_amount].should  == nil
+      expect(result[:float_amount]).to    eq(nil)
+      expect(result[:fraction_amount]).to eq('1/2')
+      expect(result[:integer_amount]).to  eq(nil)
     end
 
   end
@@ -34,15 +34,15 @@ describe Ingreedy::AmountParser do
   context 'compound fractions' do
 
     it 'should parse' do
-      subject.should parse('1 1/2')
+      expect(subject).to parse('1 1/2')
     end
 
     it 'should capture an integer and a fraction' do
       result = subject.parse('1 1/2')
 
-      result[:float_amount].should    == nil
-      result[:fraction_amount].should == '1/2'
-      result[:integer_amount].should  == '1'
+      expect(result[:float_amount]).to    eq(nil)
+      expect(result[:fraction_amount]).to eq('1/2')
+      expect(result[:integer_amount]).to  eq('1')
     end
 
   end
@@ -50,19 +50,19 @@ describe Ingreedy::AmountParser do
   context 'decimals' do
 
     it 'should parse a short decimal' do
-      subject.should parse('1.0')
+      expect(subject).to parse('1.0')
     end
 
     it 'should parse a long decimal' do
-      subject.should parse('3.1415926')
+      expect(subject).to parse('3.1415926')
     end
 
     it 'should capture a float' do
       result = subject.parse('3.14')
 
-      result[:float_amount].should    == '3.14'
-      result[:fraction_amount].should == nil
-      result[:integer_amount].should  == nil
+      expect(result[:float_amount]).to    eq('3.14')
+      expect(result[:fraction_amount]).to eq(nil)
+      expect(result[:integer_amount]).to  eq(nil)
     end
 
   end
@@ -70,19 +70,19 @@ describe Ingreedy::AmountParser do
   context 'integers' do
 
     it 'should parse a small integer' do
-      subject.should parse('1')
+      expect(subject).to parse('1')
     end
 
     it 'should parse a large integer' do
-      subject.should parse('823842834')
+      expect(subject).to parse('823842834')
     end
 
     it 'should capture an integer' do
       result = subject.parse('123')
 
-      result[:float_amount].should    == nil
-      result[:fraction_amount].should == nil
-      result[:integer_amount].should  == '123'
+      expect(result[:float_amount]).to    eq(nil)
+      expect(result[:fraction_amount]).to eq(nil)
+      expect(result[:integer_amount]).to  eq('123')
     end
 
   end
@@ -90,7 +90,7 @@ describe Ingreedy::AmountParser do
   context 'junk' do
 
     it 'should not parse a non-number' do
-      subject.should_not parse('asdf')
+      expect(subject).not_to parse('asdf')
     end
 
   end
