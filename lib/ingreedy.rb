@@ -5,16 +5,20 @@ require File.join(path, 'ingreedy_parser')
 require File.join(path, 'dictionary_collection')
 
 module Ingreedy
-  class << self
-    attr_accessor :locale
+  def self.locale
+    @locale ||= nil
+  end
 
-    def parse(query)
-      parser = Parser.new(query)
-      parser.parse
-    end
+  def self.locale=(locale)
+    @locale = locale
+  end
 
-    def dictionaries
-      @dictionaries ||= DictionaryCollection.new
-    end
+  def self.parse(query)
+    parser = Parser.new(query)
+    parser.parse
+  end
+
+  def self.dictionaries
+    @dictionaries ||= DictionaryCollection.new
   end
 end
