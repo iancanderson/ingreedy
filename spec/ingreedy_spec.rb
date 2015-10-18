@@ -1,21 +1,19 @@
 # encoding: utf-8
-require 'spec_helper'
+require "spec_helper"
 
 describe Ingreedy do
-
   context "amount parsing" do
-
     {
       "1 cup flour" => 1,
       "one cup flour" => 1,
-      "1 1/2 cups flour" => '3/2',
-      "¼ cups flour" => '1/4',
-      "1 ½ cups flour" => '3/2',
-      "1½ cups flour" => '3/2',
+      "1 1/2 cups flour" => "3/2",
+      "¼ cups flour" => "1/4",
+      "1 ½ cups flour" => "3/2",
+      "1½ cups flour" => "3/2",
       "1.0 cup flour" => 1,
-      "1.5 cups flour" => '3/2',
-      "1,5 cups flour" => '3/2',
-      "1 2/3 cups flour" => '5/3',
+      "1.5 cups flour" => "3/2",
+      "1,5 cups flour" => "3/2",
+      "1 2/3 cups flour" => "5/3",
       "1 (28 ounce) can crushed tomatoes" => 1,
       "2 (28 ounce) can crushed tomatoes" => 2,
       "3 28 ounce can crushed tomatoes" => 3,
@@ -23,44 +21,33 @@ describe Ingreedy do
       "two five-ounce can crushed tomatoes" => 2,
       "two 28 ounce cans crushed tomatoes" => 2,
       "three 28 ounce cans crushed tomatoes" => 3,
-      "1/2 cups flour" => '1/2',
-      ".25 cups flour" => '1/4',
+      "1/2 cups flour" => "1/2",
+      ".25 cups flour" => "1/4",
       "12oz tequila" => 12,
       "1 banana" => 1
     }.each do |query, expected|
-
-      it "should parse the correct amount as a rational" do
+      it "parses the correct amount as a rational" do
         expect(Ingreedy.parse(query)).to parse_the_amount(expected.to_r)
       end
-
     end
-
   end
 
   context "unit parsing" do
-
     context "(english)" do
-
     end
-
     context "(metric)" do
-
     end
-
     context "(nonstandard)" do
-
     end
   end
 
-  context "all together now" do
-    subject { Ingreedy.parse('1 lb potatoes') }
+  it "parses a simple example correctly" do
+    result = Ingreedy.parse("1 lb potatoes")
 
-    its(:amount) { should == 1 }
-    its(:unit) { should == :pound }
-    its(:ingredient) { should == 'potatoes' }
-
+    expect(result.amount).to eq(1)
+    expect(result.unit).to eq(:pound)
+    expect(result.ingredient).to eq("potatoes")
   end
-
 end
 
 describe "english units" do
@@ -101,11 +88,9 @@ describe "english units" do
       "1 LB flour" => :pound,
       "1 tSP sugar" => :teaspoon
     }.each do |query, expected|
-
-      it "should parse the units correctly" do
+      it "parses the units correctly" do
         expect(Ingreedy.parse(query)).to parse_the_unit(expected)
       end
-
     end
   end
 
@@ -126,7 +111,7 @@ describe "english units" do
       "2 teaspoon flour" => :teaspoon,
       "2 teaspoons flour" => :teaspoon
     }.each do |query, expected|
-      it "should parse the units correctly" do
+      it "parses the units correctly" do
         expect(Ingreedy.parse(query)).to parse_the_unit(expected)
       end
     end
@@ -149,7 +134,7 @@ describe "metric units" do
       "1 ml water" => :milliliter,
       "1 ml. water" => :milliliter
     }.each do |query, expected|
-      it "should parse the units correctly" do
+      it "parses the units correctly" do
         expect(Ingreedy.parse(query)).to parse_the_unit(expected)
       end
     end
@@ -168,7 +153,7 @@ describe "metric units" do
       "1 milliliter water" => :milliliter,
       "2 milliliters water" => :milliliter
     }.each do |query, expected|
-      it "should parse the units correctly" do
+      it "parses the units correctly" do
         expect(Ingreedy.parse(query)).to parse_the_unit(expected)
       end
     end
@@ -189,206 +174,168 @@ describe "nonstandard units" do
     "2 cloves of garlic" => :clove,
     "1 can of tomatoes" => :can
   }.each do |query, expected|
-    it "should parse the units correctly" do
+    it "parses the units correctly" do
       expect(Ingreedy.parse(query)).to parse_the_unit(expected)
     end
   end
 end
 
 describe "without units" do
-  before(:all) { @ingreedy = Ingreedy.parse "3 eggs, lightly beaten" }
+  it "parses correctly" do
+    result = Ingreedy.parse "3 eggs, lightly beaten"
 
-  it "should have an amount of 3" do
-    expect(@ingreedy.amount).to eq(3)
-  end
-
-  it "should have a nil unit" do
-    expect(@ingreedy.unit).to be_nil
-  end
-
-  it "should have the correct ingredient" do
-    expect(@ingreedy.ingredient).to eq("eggs, lightly beaten")
+    expect(result.amount).to eq(3)
+    expect(result.unit).to be_nil
+    expect(result.ingredient).to eq("eggs, lightly beaten")
   end
 end
 
-describe 'container as part of quantity' do
-  before(:all) { @ingreedy = Ingreedy.parse "160g (2 cans) of tomatoes" }
+describe "container as part of quantity" do
+  it "parses correctly" do
+    result = Ingreedy.parse "160g (2 cans) of tomatoes"
 
-  it "should have the correct amount" do
-    expect(@ingreedy.amount).to eq(160)
+    expect(result.amount).to eq(160)
+    expect(result.unit).to eq(:gram)
+    expect(result.container_amount).to eq(2)
+    expect(result.container_unit).to eq(:can)
+    expect(result.ingredient).to eq("tomatoes")
   end
 
-  it "should the have correct unit" do
-    expect(@ingreedy.unit).to eq(:gram)
-  end
-
-  it 'should have the correct container amount' do
-    expect(@ingreedy.container_amount).to eq(2)
-  end
-
-  it 'should have the correct container unit' do
-    expect(@ingreedy.container_unit).to eq(:can)
-  end
-
-  it "should have the correct ingredient" do
-    expect(@ingreedy.ingredient).to eq("tomatoes")
-  end
-
-  context 'on language without preposition' do
+  context "on language without preposition" do
     before(:all) do
-      Ingreedy.dictionaries[:id] = { units: { to_taste: ['secukupnya'], gram: ['g'], can: ['kaleng'] } }
+      Ingreedy.dictionaries[:id] = {
+        units: { to_taste: ["secukupnya"], gram: ["g"], can: ["kaleng"] }
+      }
       Ingreedy.locale = :id
-      @ingreedy = Ingreedy.parse "160g (2 kaleng) tomat"
     end
 
     after(:all) do
       Ingreedy.locale = nil
     end
 
-    it "should have the correct amount" do
-      expect(@ingreedy.amount).to eq(160)
-    end
+    it "parses correctly" do
+      result = Ingreedy.parse "160g (2 kaleng) tomat"
 
-    it "should the have correct unit" do
-      expect(@ingreedy.unit).to eq(:gram)
-    end
-
-    it 'should have the correct container amount' do
-      expect(@ingreedy.container_amount).to eq(2)
-    end
-
-    it 'should have the correct container unit' do
-      expect(@ingreedy.container_unit).to eq(:can)
-    end
-
-    it "should have the correct ingredient" do
-      expect(@ingreedy.ingredient).to eq("tomat")
+      expect(result.amount).to eq(160)
+      expect(result.unit).to eq(:gram)
+      expect(result.container_amount).to eq(2)
+      expect(result.container_unit).to eq(:can)
+      expect(result.ingredient).to eq("tomat")
     end
   end
 end
 
 describe "with 'a' as quantity and preposition 'of'" do
-  before(:all) { @ingreedy = Ingreedy.parse "a dash of ginger" }
+  it "parses correctly" do
+    result = Ingreedy.parse "a dash of ginger"
 
-  it "should have the correct amount" do
-    expect(@ingreedy.amount).to eq(1)
-  end
-
-  it "should have the correct unit" do
-    expect(@ingreedy.unit).to eq(:dash)
-  end
-
-  it "should have the correct ingredient" do
-    expect(@ingreedy.ingredient).to eq("ginger")
+    expect(result.amount).to eq(1)
+    expect(result.unit).to eq(:dash)
+    expect(result.ingredient).to eq("ginger")
   end
 end
 
 describe "with 'reverse format'" do
-  it "should work with words containing a 'word digit'" do
-    @ingreedy = Ingreedy.parse "salt 200g"
-    expect(@ingreedy.amount).to eq(200)
-    expect(@ingreedy.unit).to eq(:gram)
-    expect(@ingreedy.ingredient).to eq("salt")
+  it "works with words containing a 'word digit'" do
+    result = Ingreedy.parse "salt 200g"
+
+    expect(result.amount).to eq(200)
+    expect(result.unit).to eq(:gram)
+    expect(result.ingredient).to eq("salt")
   end
 
-  it "should work with words ending on a 'word digit'" do
-    @ingreedy = Ingreedy.parse "quinoa 200g"
-    expect(@ingreedy.amount).to eq(200)
-    expect(@ingreedy.unit).to eq(:gram)
-    expect(@ingreedy.ingredient).to eq("quinoa")
+  it "works with words ending on a 'word digit'" do
+    result = Ingreedy.parse "quinoa 200g"
+
+    expect(result.amount).to eq(200)
+    expect(result.unit).to eq(:gram)
+    expect(result.ingredient).to eq("quinoa")
   end
 
-  it "should work with approximate quantities" do
-    @ingreedy = Ingreedy.parse "salt to taste"
-    expect(@ingreedy.ingredient).to eq("salt")
-    expect(@ingreedy.amount).to be_nil
-    expect(@ingreedy.unit).to eq(:to_taste)
+  it "works with approximate quantities" do
+    result = Ingreedy.parse "salt to taste"
+
+    expect(result.ingredient).to eq("salt")
+    expect(result.amount).to be_nil
+    expect(result.unit).to eq(:to_taste)
   end
 end
 
 describe "Given a range" do
   it "works with simple ranges" do
-    @ingreedy = Ingreedy.parse "1-2 tbsp salt"
-    expect(@ingreedy.amount).to eq([1, 2])
-    expect(@ingreedy.unit).to eq(:tablespoon)
-    expect(@ingreedy.ingredient).to eq("salt")
+    result = Ingreedy.parse "1-2 tbsp salt"
+
+    expect(result.amount).to eq([1, 2])
+    expect(result.unit).to eq(:tablespoon)
+    expect(result.ingredient).to eq("salt")
   end
 
   it "works with spaces" do
-    @ingreedy = Ingreedy.parse "1 - 2 tbsp salt"
-    expect(@ingreedy.amount).to eq([1, 2])
-    expect(@ingreedy.unit).to eq(:tablespoon)
-    expect(@ingreedy.ingredient).to eq("salt")
+    result = Ingreedy.parse "1 - 2 tbsp salt"
+
+    expect(result.amount).to eq([1, 2])
+    expect(result.unit).to eq(:tablespoon)
+    expect(result.ingredient).to eq("salt")
   end
 end
 
 describe "parsing in language with no prepositions" do
   before(:all) do
-    Ingreedy.dictionaries[:id] = { units: { to_taste: ['secukupnya'], gram: ['g'] } }
+    Ingreedy.dictionaries[:id] = {
+      units: { to_taste: ["secukupnya"], gram: ["g"] }
+    }
     Ingreedy.locale = :id
-    @ingreedy = Ingreedy.parse "garam secukupnya"
   end
 
   after(:all) do
     Ingreedy.locale = nil
   end
 
-  it "should have a nil amount" do
-    expect(@ingreedy.amount).to be_nil
-  end
+  it "parses correctly" do
+    result = Ingreedy.parse "garam secukupnya"
 
-  it "should have the correct  unit" do
-    expect(@ingreedy.unit).to eq(:to_taste)
-  end
-
-  it "should have the correct ingredient" do
-    expect(@ingreedy.ingredient).to eq("garam")
+    expect(result.amount).to be_nil
+    expect(result.unit).to eq(:to_taste)
+    expect(result.ingredient).to eq("garam")
   end
 end
-
 
 describe "custom dictionaries" do
   context "using Ingreedy.locale=" do
     before(:all) do
-      Ingreedy.dictionaries[:fr] = { units: { dash: ['pincee'] }, numbers: { 'une' => 1 }, prepositions: ['de'] }
+      Ingreedy.dictionaries[:fr] = {
+        numbers: { "une" => 1 },
+        prepositions: ["de"],
+        units: { dash: ["pincee"] },
+      }
       Ingreedy.locale = :fr
-      @ingreedy = Ingreedy.parse "une pincee de sucre"
     end
 
     after(:all) do
       Ingreedy.locale = nil
     end
 
-    it "should have the correct amount" do
-      expect(@ingreedy.amount).to eq(1)
-    end
+    it "parses correctly" do
+      result = Ingreedy.parse "une pincee de sucre"
 
-    it "should have the correct unit" do
-      expect(@ingreedy.unit).to eq(:dash)
-    end
-
-    it "should have the correct ingredient" do
-      expect(@ingreedy.ingredient).to eq("sucre")
+      expect(result.amount).to eq(1)
+      expect(result.unit).to eq(:dash)
+      expect(result.ingredient).to eq("sucre")
     end
   end
 
   context "using I18n.locale" do
     before(:each) do
-      Ingreedy.dictionaries[:de] = { units: { dash: ['prise'] } }
-      stub_const 'I18n', double('I18n', locale: :de)
-      @ingreedy = Ingreedy.parse "1 Prise Zucker"
+      Ingreedy.dictionaries[:de] = { units: { dash: ["prise"] } }
+      stub_const "I18n", double("I18n", locale: :de)
     end
 
-    it "should have the correct amount" do
-      expect(@ingreedy.amount).to eq(1)
-    end
+    it "parses correctly" do
+      result = Ingreedy.parse "1 Prise Zucker"
 
-    it "should have the correct unit" do
-      expect(@ingreedy.unit).to eq(:dash)
-    end
-
-    it "should have the correct ingredient" do
-      expect(@ingreedy.ingredient).to eq("Zucker")
+      expect(result.amount).to eq(1)
+      expect(result.unit).to eq(:dash)
+      expect(result.ingredient).to eq("Zucker")
     end
   end
 
@@ -401,20 +348,24 @@ describe "custom dictionaries" do
       Ingreedy.locale = nil
     end
 
-    it "should raise an informative exception" do
-      expect { Ingreedy.parse "1 tsk salt" }.to raise_exception('No dictionary found for :da locale')
+    it "raises an informative exception" do
+      expect do
+        Ingreedy.parse "1 tsk salt"
+      end.to raise_exception("No dictionary found for :da locale")
     end
   end
 
   context "Dictionary with no units" do
-    it "should raise an informative exception" do
-      expect { Ingreedy.dictionaries[:da] = {} }.to raise_exception('No units found in dictionary')
+    it "raises an informative exception" do
+      expect do
+        Ingreedy.dictionaries[:da] = {}
+      end.to raise_exception("No units found in dictionary")
     end
   end
 end
 
 describe "ingredient formatting" do
-  it "should not have any preceding or trailing whitespace" do
+  it "strips preceding or trailing whitespace" do
     expect(Ingreedy.parse("1 cup flour ").ingredient).to eq("flour")
   end
 end

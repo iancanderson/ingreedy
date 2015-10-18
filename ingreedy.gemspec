@@ -14,7 +14,6 @@ Gem::Specification.new do |s|
 
  s.add_development_dependency 'rake', '~> 0.9', '>= 0.9'
  s.add_development_dependency 'rspec', '~> 3.3.0', '>= 3.3.0'
- s.add_development_dependency 'rspec-its', '~> 1.2.0', '>= 1.2.0'
  s.add_development_dependency 'coveralls', '~> 0.7.0', '>= 0.7.0'
  s.add_development_dependency 'pry'
  s.files       = Dir.glob("lib/**/*.rb")

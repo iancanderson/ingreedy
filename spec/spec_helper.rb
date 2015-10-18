@@ -6,7 +6,6 @@ end
 require 'ingreedy'
 require 'parslet/rig/rspec'
 require 'pry'
-require 'rspec/its'
 
 RSpec::Matchers.define :parse_the_unit do |unit|
   match do |ingreedy_output|
