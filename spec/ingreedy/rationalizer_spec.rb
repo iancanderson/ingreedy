@@ -18,7 +18,7 @@ describe Ingreedy::Rationalizer do
 
   context 'with a vulgar fraction' do
     it 'should give back a rational' do
-      subject.rationalize(fraction: '¼').should == '1/4'.to_r
+      expect(subject.rationalize(fraction: '¼')).to eq('1/4'.to_r)
     end
   end
 
@@ -36,7 +36,7 @@ describe Ingreedy::Rationalizer do
 
   context 'with a european float' do
     it 'should give back a rational' do
-      subject.rationalize(float: '0,4').should == '4/10'.to_r
+      expect(subject.rationalize(float: '0,4')).to eq('4/10'.to_r)
     end
   end
 

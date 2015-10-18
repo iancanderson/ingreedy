@@ -23,7 +23,7 @@ describe Ingreedy::AmountParser do
     end
 
     it 'should parse vulgar fractions' do
-      subject.should parse('½')
+      expect(subject).to parse('½')
     end
 
     it 'should capture a fraction' do
@@ -73,9 +73,9 @@ describe Ingreedy::AmountParser do
     it 'should capture a european style float' do
       result = subject.parse('3,14')
 
-      result[:float_amount].should    == '3,14'
-      result[:fraction_amount].should == nil
-      result[:integer_amount].should  == nil
+      expect(result[:float_amount]).to    eq('3,14')
+      expect(result[:fraction_amount]).to eq(nil)
+      expect(result[:integer_amount]).to  eq(nil)
     end
 
   end

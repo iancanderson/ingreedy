@@ -215,23 +215,23 @@ describe 'container as part of quantity' do
   before(:all) { @ingreedy = Ingreedy.parse "160g (2 cans) of tomatoes" }
 
   it "should have the correct amount" do
-    @ingreedy.amount.should == 160
+    expect(@ingreedy.amount).to eq(160)
   end
 
   it "should the have correct unit" do
-    @ingreedy.unit.should == :gram
+    expect(@ingreedy.unit).to eq(:gram)
   end
 
   it 'should have the correct container amount' do
-    @ingreedy.container_amount.should == 2
+    expect(@ingreedy.container_amount).to eq(2)
   end
 
   it 'should have the correct container unit' do
-    @ingreedy.container_unit.should == :can
+    expect(@ingreedy.container_unit).to eq(:can)
   end
 
   it "should have the correct ingredient" do
-    @ingreedy.ingredient.should == "tomatoes"
+    expect(@ingreedy.ingredient).to eq("tomatoes")
   end
 
   context 'on language without preposition' do
@@ -246,23 +246,23 @@ describe 'container as part of quantity' do
     end
 
     it "should have the correct amount" do
-      @ingreedy.amount.should == 160
+      expect(@ingreedy.amount).to eq(160)
     end
 
     it "should the have correct unit" do
-      @ingreedy.unit.should == :gram
+      expect(@ingreedy.unit).to eq(:gram)
     end
 
     it 'should have the correct container amount' do
-      @ingreedy.container_amount.should == 2
+      expect(@ingreedy.container_amount).to eq(2)
     end
 
     it 'should have the correct container unit' do
-      @ingreedy.container_unit.should == :can
+      expect(@ingreedy.container_unit).to eq(:can)
     end
 
     it "should have the correct ingredient" do
-      @ingreedy.ingredient.should == "tomat"
+      expect(@ingreedy.ingredient).to eq("tomat")
     end
   end
 end
@@ -309,16 +309,16 @@ end
 describe "Given a range" do
   it "works with simple ranges" do
     @ingreedy = Ingreedy.parse "1-2 tbsp salt"
-    @ingreedy.amount.should == [1, 2]
-    @ingreedy.unit.should == :tablespoon
-    @ingreedy.ingredient.should == "salt"
+    expect(@ingreedy.amount).to eq([1, 2])
+    expect(@ingreedy.unit).to eq(:tablespoon)
+    expect(@ingreedy.ingredient).to eq("salt")
   end
 
   it "works with spaces" do
     @ingreedy = Ingreedy.parse "1 - 2 tbsp salt"
-    @ingreedy.amount.should == [1, 2]
-    @ingreedy.unit.should == :tablespoon
-    @ingreedy.ingredient.should == "salt"
+    expect(@ingreedy.amount).to eq([1, 2])
+    expect(@ingreedy.unit).to eq(:tablespoon)
+    expect(@ingreedy.ingredient).to eq("salt")
   end
 end
 
