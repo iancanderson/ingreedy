@@ -6,7 +6,6 @@ describe Ingreedy do
 
     {
       "1 cup flour" => 1,
-      "1 cup flour" => 1,
       "one cup flour" => 1,
       "1 1/2 cups flour" => '3/2',
       "¼ cups flour" => '1/4',
