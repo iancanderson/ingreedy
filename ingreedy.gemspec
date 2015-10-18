@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
  s.name        = "ingreedy"
  s.version     = Ingreedy::VERSION
  s.authors     = ["Ian C. Anderson"]
- s.email       = ["anderson.ian.c@gmail.com"]
+ s.email       = ["ian@iancanderson.com"]
 
  s.summary     = "Recipe parser"
  s.description = "Natural language recipe ingredient parser that supports numeric amount, units, and ingredient"
