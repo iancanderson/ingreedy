@@ -24,7 +24,7 @@ describe Ingreedy do
       "1/2 cups flour" => "1/2",
       ".25 cups flour" => "1/4",
       "12oz tequila" => 12,
-      "1 banana" => 1
+      "1 banana" => 1,
     }.each do |query, expected|
       it "parses the correct amount as a rational" do
         expect(Ingreedy.parse(query)).to parse_the_amount(expected.to_r)
@@ -86,7 +86,7 @@ describe "english units" do
       "12oz tequila" => :ounce,
       "2 TSP flour" => :teaspoon,
       "1 LB flour" => :pound,
-      "1 tSP sugar" => :teaspoon
+      "1 tSP sugar" => :teaspoon,
     }.each do |query, expected|
       it "parses the units correctly" do
         expect(Ingreedy.parse(query)).to parse_the_unit(expected)
@@ -109,7 +109,7 @@ describe "english units" do
       "2 tablespoon flour" => :tablespoon,
       "2 tablespoons flour" => :tablespoon,
       "2 teaspoon flour" => :teaspoon,
-      "2 teaspoons flour" => :teaspoon
+      "2 teaspoons flour" => :teaspoon,
     }.each do |query, expected|
       it "parses the units correctly" do
         expect(Ingreedy.parse(query)).to parse_the_unit(expected)
@@ -132,7 +132,7 @@ describe "metric units" do
       "1 mg water" => :milligram,
       "1 mg. water" => :milligram,
       "1 ml water" => :milliliter,
-      "1 ml. water" => :milliliter
+      "1 ml. water" => :milliliter,
     }.each do |query, expected|
       it "parses the units correctly" do
         expect(Ingreedy.parse(query)).to parse_the_unit(expected)
@@ -151,7 +151,7 @@ describe "metric units" do
       "1 milligram water" => :milligram,
       "2 milligrams water" => :milligram,
       "1 milliliter water" => :milliliter,
-      "2 milliliters water" => :milliliter
+      "2 milliliters water" => :milliliter,
     }.each do |query, expected|
       it "parses the units correctly" do
         expect(Ingreedy.parse(query)).to parse_the_unit(expected)
@@ -172,7 +172,7 @@ describe "nonstandard units" do
     "2 handfuls rice" => :handful,
     "1 stick of butter" => :stick,
     "2 cloves of garlic" => :clove,
-    "1 can of tomatoes" => :can
+    "1 can of tomatoes" => :can,
   }.each do |query, expected|
     it "parses the units correctly" do
       expect(Ingreedy.parse(query)).to parse_the_unit(expected)
@@ -204,7 +204,11 @@ describe "container as part of quantity" do
   context "on language without preposition" do
     before(:all) do
       Ingreedy.dictionaries[:id] = {
-        units: { to_taste: ["secukupnya"], gram: ["g"], can: ["kaleng"] }
+        units: {
+          can: ["kaleng"],
+          gram: ["g"],
+          to_taste: ["secukupnya"],
+        },
       }
       Ingreedy.locale = :id
     end
@@ -282,7 +286,10 @@ end
 describe "parsing in language with no prepositions" do
   before(:all) do
     Ingreedy.dictionaries[:id] = {
-      units: { to_taste: ["secukupnya"], gram: ["g"] }
+      units: {
+        gram: ["g"],
+        to_taste: ["secukupnya"],
+      },
     }
     Ingreedy.locale = :id
   end

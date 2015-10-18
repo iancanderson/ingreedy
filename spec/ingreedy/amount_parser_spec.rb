@@ -3,13 +3,13 @@ require "spec_helper"
 
 describe Ingreedy::AmountParser do
   context "given mixed case insensitive english words" do
-    %w|one two three four five six seven eight nine ten eleven twelve|.each do |word|
+    %w(one two three four five six seven eight nine ten eleven twelve).each do |word|
       word += " "
-      it %Q|parses a lowercase "#{word}" followed by space| do
-        expect(subject).to parse(word )
+      it %(parses a lowercase "#{word}" followed by space) do
+        expect(subject).to parse(word)
       end
 
-      it %Q|parses a uppercase "#{word}"| do
+      it %(parses a uppercase "#{word}") do
         expect(subject).to parse(word.upcase)
       end
     end

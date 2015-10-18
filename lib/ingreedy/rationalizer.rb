@@ -22,7 +22,7 @@ module Ingreedy
       elsif @integer
         result = @integer.to_r
       elsif @float
-        result = @float.gsub(',', '.').to_r
+        result = @float.tr(",", ".").to_r
       end
 
       result
@@ -30,17 +30,19 @@ module Ingreedy
 
     private
 
-      def rationalize_fraction
-        vulgar_fractions.each { |char, amount| @fraction.gsub!(char, amount.to_s) }
-        @fraction.to_r
+    def rationalize_fraction
+      vulgar_fractions.each do |char, amount|
+        @fraction.gsub!(char, amount.to_s)
       end
+      @fraction.to_r
+    end
 
-      def vulgar_fractions
-        Ingreedy.dictionaries.current.vulgar_fractions
-      end
+    def vulgar_fractions
+      Ingreedy.dictionaries.current.vulgar_fractions
+    end
 
-      def rationalize_word
-        Ingreedy.dictionaries.current.numbers[@word.downcase]
-      end
+    def rationalize_word
+      Ingreedy.dictionaries.current.numbers[@word.downcase]
+    end
   end
 end

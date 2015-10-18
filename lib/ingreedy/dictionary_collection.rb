@@ -1,5 +1,5 @@
-require 'yaml'
-require_relative 'dictionary'
+require "yaml"
+require_relative "dictionary"
 
 module Ingreedy
   class DictionaryCollection
@@ -26,7 +26,9 @@ module Ingreedy
     end
 
     def load_yaml(locale)
-      path = File.expand_path(File.join(File.dirname(__FILE__), 'dictionaries', "#{locale}.yml"))
+      path = File.expand_path(
+        File.join(File.dirname(__FILE__), "dictionaries", "#{locale}.yml"),
+      )
       YAML.load_file(path)
     rescue Errno::ENOENT
       raise "No dictionary found for :#{locale} locale"

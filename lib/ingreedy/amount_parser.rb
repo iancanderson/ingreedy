@@ -1,7 +1,6 @@
-require 'parslet'
+require "parslet"
 
 module Ingreedy
-
   class AmountParser < Parslet::Parser
     include CaseInsensitiveParser
 
@@ -10,16 +9,16 @@ module Ingreedy
     end
 
     rule(:integer) do
-      match('[0-9]').repeat(1)
+      match("[0-9]").repeat(1)
     end
 
     rule(:float) do
       integer.maybe >>
-      float_delimiter >> integer
+        float_delimiter >> integer
     end
 
     rule(:float_delimiter) do
-      str(',') | str('.')
+      str(",") | str(".")
     end
 
     rule(:fraction) do
@@ -28,16 +27,16 @@ module Ingreedy
 
     rule(:compound_simple_fraction) do
       (integer.as(:integer_amount) >> whitespace).maybe >>
-      simple_fraction.as(:fraction_amount)
+        simple_fraction.as(:fraction_amount)
     end
 
     rule(:simple_fraction) do
-      integer >> match('/') >> integer
+      integer >> match("/") >> integer
     end
 
     rule(:compound_vulgar_fraction) do
       (integer.as(:integer_amount) >> whitespace.maybe).maybe >>
-      vulgar_fraction.as(:fraction_amount)
+        vulgar_fraction.as(:fraction_amount)
     end
 
     rule(:vulgar_fraction) do
@@ -49,26 +48,26 @@ module Ingreedy
     end
 
     rule(:amount_unit_separator) do
-      whitespace | str('-')
+      whitespace | str("-")
     end
 
     rule(:amount) do
       fraction |
-      float.as(:float_amount) |
-      integer.as(:integer_amount) |
-      word_digit.as(:word_integer_amount) >> amount_unit_separator
+        float.as(:float_amount) |
+        integer.as(:integer_amount) |
+        word_digit.as(:word_integer_amount) >> amount_unit_separator
     end
 
     root(:amount)
 
     private
 
-      def word_digits
-        Ingreedy.dictionaries.current.numbers.keys
-      end
+    def word_digits
+      Ingreedy.dictionaries.current.numbers.keys
+    end
 
-      def vulgar_fractions
-        Ingreedy.dictionaries.current.vulgar_fractions.keys
-      end
+    def vulgar_fractions
+      Ingreedy.dictionaries.current.vulgar_fractions.keys
+    end
   end
 end
