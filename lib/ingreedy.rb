@@ -21,4 +21,8 @@ module Ingreedy
   def self.dictionaries
     @dictionaries ||= DictionaryCollection.new
   end
+
+  def self.current_dictionary
+    dictionaries.current
+  end
 end

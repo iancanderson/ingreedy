@@ -9,6 +9,7 @@ module Ingreedy
       @float    = options.fetch(:float, nil)
       @fraction = options.fetch(:fraction, nil)
       @word     = options.fetch(:word, nil)
+      @dictionary = options.fetch(:dictionary, Ingreedy.current_dictionary)
     end
 
     def rationalize
@@ -30,6 +31,8 @@ module Ingreedy
 
     private
 
+    attr_reader :dictionary
+
     def rationalize_fraction
       vulgar_fractions.each do |char, amount|
         @fraction.gsub!(char, amount.to_s)
@@ -38,11 +41,11 @@ module Ingreedy
     end
 
     def vulgar_fractions
-      Ingreedy.dictionaries.current.vulgar_fractions
+      dictionary.vulgar_fractions
     end
 
     def rationalize_word
-      Ingreedy.dictionaries.current.numbers[@word.downcase]
+      dictionary.numbers[@word.downcase]
     end
   end
 end

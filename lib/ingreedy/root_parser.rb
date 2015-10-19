@@ -1,15 +1,15 @@
 module Ingreedy
   class RootParser < Parslet::Parser
     rule(:range) do
-      AmountParser.new.as(:amount) >>
+      amount_parser.as(:amount) >>
         whitespace.maybe >>
         str("-") >>
         whitespace.maybe >>
-        AmountParser.new.as(:amount_end)
+        amount_parser.as(:amount_end)
     end
 
     rule(:amount) do
-      AmountParser.new.as(:amount)
+      amount_parser.as(:amount)
     end
 
     rule(:whitespace) do
@@ -17,7 +17,7 @@ module Ingreedy
     end
 
     rule(:container_amount) do
-      AmountParser.new
+      amount_parser
     end
 
     rule(:unit) do
@@ -92,8 +92,9 @@ module Ingreedy
 
     root :ingredient_addition
 
-    def initialize(original_query)
+    def initialize(original_query, options = {})
       @original_query = original_query
+      @dictionary = options.fetch(:dictionary, Ingreedy.current_dictionary)
     end
 
     def parse
@@ -102,17 +103,25 @@ module Ingreedy
 
     private
 
-    attr_reader :original_query
+    attr_reader :dictionary, :original_query
+
+    def amount_parser
+      AmountParser.new(dictionary: dictionary)
+    end
 
     def prepositions
-      Ingreedy.dictionaries.current.prepositions
+      dictionary.prepositions
     end
 
     def unit_matches
       @unit_matches ||= original_query.
-                        scan(UnitVariationMapper.regexp).
+                        scan(unit_variation_mapper.regexp).
                         sort_by(&:length).
                         reverse
+    end
+
+    def unit_variation_mapper
+      UnitVariationMapper.new(dictionary: dictionary)
     end
   end
 end

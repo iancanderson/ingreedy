@@ -18,15 +18,16 @@ module Ingreedy
       :original_query,
     )
 
-    def initialize(original_query)
+    def initialize(original_query, options = {})
       @original_query = original_query
+      @dictionary = options.fetch(:dictionary, Ingreedy.current_dictionary)
     end
 
     def parse
       result = Result.new
       result.original_query = original_query
 
-      parslet = RootParser.new(original_query).parse
+      parslet = RootParser.new(original_query, dictionary: dictionary).parse
 
       result.amount = rationalize parslet[:amount]
       result.amount = [
@@ -51,8 +52,14 @@ module Ingreedy
 
     private
 
+    attr_reader :dictionary
+
     def convert_unit_variation_to_canonical(unit_variation)
-      UnitVariationMapper.unit_from_variation(unit_variation)
+      unit_variation_mapper.unit_from_variation(unit_variation)
+    end
+
+    def unit_variation_mapper
+      UnitVariationMapper.new(dictionary: dictionary)
     end
 
     def rationalize(amount)
@@ -74,6 +81,7 @@ module Ingreedy
         float: float,
         fraction: fraction,
         word: word,
+        dictionary: dictionary
       )
     end
   end

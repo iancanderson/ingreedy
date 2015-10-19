@@ -60,14 +60,20 @@ module Ingreedy
 
     root(:amount)
 
+    def initialize(options = {})
+      @dictionary = options.fetch(:dictionary, Ingreedy.current_dictionary)
+    end
+
     private
 
+    attr_reader :dictionary
+
     def word_digits
-      Ingreedy.dictionaries.current.numbers.keys
+      dictionary.numbers.keys
     end
 
     def vulgar_fractions
-      Ingreedy.dictionaries.current.vulgar_fractions.keys
+      dictionary.vulgar_fractions.keys
     end
   end
 end

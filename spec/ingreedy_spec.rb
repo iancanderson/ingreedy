@@ -193,23 +193,17 @@ describe Ingreedy, "container as part of quantity" do
   end
 
   context "on language without preposition" do
-    before(:all) do
-      Ingreedy.dictionaries[:id] = {
-        units: {
-          can: ["kaleng"],
-          gram: ["g"],
-          to_taste: ["secukupnya"],
-        },
-      }
-      Ingreedy.locale = :id
-    end
-
-    after(:all) do
-      Ingreedy.locale = nil
-    end
-
     it "parses correctly" do
-      result = Ingreedy.parse "160g (2 kaleng) tomat"
+      result = Ingreedy::Parser.new(
+        "160g (2 kaleng) tomat",
+        dictionary: Ingreedy::Dictionary.new(
+          units: {
+            can: ["kaleng"],
+            gram: ["g"],
+            to_taste: ["secukupnya"],
+          }
+        )
+      ).parse
 
       expect(result.amount).to eq(160)
       expect(result.unit).to eq(:gram)
@@ -275,22 +269,16 @@ describe Ingreedy, "Given a range" do
 end
 
 describe Ingreedy, "parsing in language with no prepositions" do
-  before(:all) do
-    Ingreedy.dictionaries[:id] = {
-      units: {
-        gram: ["g"],
-        to_taste: ["secukupnya"],
-      },
-    }
-    Ingreedy.locale = :id
-  end
-
-  after(:all) do
-    Ingreedy.locale = nil
-  end
-
   it "parses correctly" do
-    result = Ingreedy.parse "garam secukupnya"
+    result = Ingreedy::Parser.new(
+      "garam secukupnya",
+      dictionary: Ingreedy::Dictionary.new(
+        units: {
+          gram: ["g"],
+          to_taste: ["secukupnya"],
+        }
+      )
+    ).parse
 
     expect(result.amount).to be_nil
     expect(result.unit).to eq(:to_taste)
@@ -300,21 +288,15 @@ end
 
 describe Ingreedy, "custom dictionaries" do
   context "using Ingreedy.locale=" do
-    before(:all) do
-      Ingreedy.dictionaries[:fr] = {
-        numbers: { "une" => 1 },
-        prepositions: ["de"],
-        units: { dash: ["pincee"] },
-      }
-      Ingreedy.locale = :fr
-    end
-
-    after(:all) do
-      Ingreedy.locale = nil
-    end
-
     it "parses correctly" do
-      result = Ingreedy.parse "une pincee de sucre"
+      result = Ingreedy::Parser.new(
+        "une pincee de sucre",
+        dictionary: Ingreedy::Dictionary.new(
+          numbers: { "une" => 1 },
+          prepositions: ["de"],
+          units: { dash: ["pincee"] },
+        )
+      ).parse
 
       expect(result.amount).to eq(1)
       expect(result.unit).to eq(:dash)
@@ -338,11 +320,11 @@ describe Ingreedy, "custom dictionaries" do
   end
 
   context "unknown locale" do
-    before(:all) do
+    before do
       Ingreedy.locale = :da
     end
 
-    after(:all) do
+    after do
       Ingreedy.locale = nil
     end
 
