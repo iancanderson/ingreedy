@@ -1,46 +1,7 @@
 # encoding: utf-8
 require "spec_helper"
 
-describe Ingreedy do
-  context "amount parsing" do
-    {
-      "1 cup flour" => 1,
-      "one cup flour" => 1,
-      "1 1/2 cups flour" => "3/2",
-      "¼ cups flour" => "1/4",
-      "1 ½ cups flour" => "3/2",
-      "1½ cups flour" => "3/2",
-      "1.0 cup flour" => 1,
-      "1.5 cups flour" => "3/2",
-      "1,5 cups flour" => "3/2",
-      "1 2/3 cups flour" => "5/3",
-      "1 (28 ounce) can crushed tomatoes" => 1,
-      "2 (28 ounce) can crushed tomatoes" => 2,
-      "3 28 ounce can crushed tomatoes" => 3,
-      "one 28 ounce can crushed tomatoes" => 1,
-      "two five-ounce can crushed tomatoes" => 2,
-      "two 28 ounce cans crushed tomatoes" => 2,
-      "three 28 ounce cans crushed tomatoes" => 3,
-      "1/2 cups flour" => "1/2",
-      ".25 cups flour" => "1/4",
-      "12oz tequila" => 12,
-      "1 banana" => 1,
-    }.each do |query, expected|
-      it "parses the correct amount as a rational" do
-        expect(Ingreedy.parse(query)).to parse_the_amount(expected.to_r)
-      end
-    end
-  end
-
-  context "unit parsing" do
-    context "(english)" do
-    end
-    context "(metric)" do
-    end
-    context "(nonstandard)" do
-    end
-  end
-
+describe Ingreedy, ".parse" do
   it "parses a simple example correctly" do
     result = Ingreedy.parse("1 lb potatoes")
 
@@ -50,7 +11,37 @@ describe Ingreedy do
   end
 end
 
-describe "english units" do
+describe Ingreedy, "amount parsing" do
+  {
+    "1 cup flour" => 1,
+    "one cup flour" => 1,
+    "1 1/2 cups flour" => "3/2",
+    "¼ cups flour" => "1/4",
+    "1 ½ cups flour" => "3/2",
+    "1½ cups flour" => "3/2",
+    "1.0 cup flour" => 1,
+    "1.5 cups flour" => "3/2",
+    "1,5 cups flour" => "3/2",
+    "1 2/3 cups flour" => "5/3",
+    "1 (28 ounce) can crushed tomatoes" => 1,
+    "2 (28 ounce) can crushed tomatoes" => 2,
+    "3 28 ounce can crushed tomatoes" => 3,
+    "one 28 ounce can crushed tomatoes" => 1,
+    "two five-ounce can crushed tomatoes" => 2,
+    "two 28 ounce cans crushed tomatoes" => 2,
+    "three 28 ounce cans crushed tomatoes" => 3,
+    "1/2 cups flour" => "1/2",
+    ".25 cups flour" => "1/4",
+    "12oz tequila" => 12,
+    "1 banana" => 1,
+  }.each do |query, expected|
+    it "parses the correct amount as a rational" do
+      expect(Ingreedy.parse(query)).to parse_the_amount(expected.to_r)
+    end
+  end
+end
+
+describe Ingreedy, "english units" do
   context "abbreviated" do
     {
       "1 c flour" => :cup,
@@ -88,7 +79,7 @@ describe "english units" do
       "1 LB flour" => :pound,
       "1 tSP sugar" => :teaspoon,
     }.each do |query, expected|
-      it "parses the units correctly" do
+      it "parses the #{expected} unit correctly" do
         expect(Ingreedy.parse(query)).to parse_the_unit(expected)
       end
     end
@@ -118,7 +109,7 @@ describe "english units" do
   end
 end
 
-describe "metric units" do
+describe Ingreedy, "metric units" do
   context "abbreviated" do
     {
       "1 g flour" => :gram,
@@ -160,7 +151,7 @@ describe "metric units" do
   end
 end
 
-describe "nonstandard units" do
+describe Ingreedy, "nonstandard units" do
   {
     "1 pinch pepper" => :pinch,
     "2 pinches pepper" => :pinch,
@@ -180,7 +171,7 @@ describe "nonstandard units" do
   end
 end
 
-describe "without units" do
+describe Ingreedy, "without units" do
   it "parses correctly" do
     result = Ingreedy.parse "3 eggs, lightly beaten"
 
@@ -190,7 +181,7 @@ describe "without units" do
   end
 end
 
-describe "container as part of quantity" do
+describe Ingreedy, "container as part of quantity" do
   it "parses correctly" do
     result = Ingreedy.parse "160g (2 cans) of tomatoes"
 
@@ -229,7 +220,7 @@ describe "container as part of quantity" do
   end
 end
 
-describe "with 'a' as quantity and preposition 'of'" do
+describe Ingreedy, "with 'a' as quantity and preposition 'of'" do
   it "parses correctly" do
     result = Ingreedy.parse "a dash of ginger"
 
@@ -239,7 +230,7 @@ describe "with 'a' as quantity and preposition 'of'" do
   end
 end
 
-describe "with 'reverse format'" do
+describe Ingreedy, "with 'reverse format'" do
   it "works with words containing a 'word digit'" do
     result = Ingreedy.parse "salt 200g"
 
@@ -265,7 +256,7 @@ describe "with 'reverse format'" do
   end
 end
 
-describe "Given a range" do
+describe Ingreedy, "Given a range" do
   it "works with simple ranges" do
     result = Ingreedy.parse "1-2 tbsp salt"
 
@@ -283,7 +274,7 @@ describe "Given a range" do
   end
 end
 
-describe "parsing in language with no prepositions" do
+describe Ingreedy, "parsing in language with no prepositions" do
   before(:all) do
     Ingreedy.dictionaries[:id] = {
       units: {
@@ -307,7 +298,7 @@ describe "parsing in language with no prepositions" do
   end
 end
 
-describe "custom dictionaries" do
+describe Ingreedy, "custom dictionaries" do
   context "using Ingreedy.locale=" do
     before(:all) do
       Ingreedy.dictionaries[:fr] = {
@@ -371,7 +362,7 @@ describe "custom dictionaries" do
   end
 end
 
-describe "ingredient formatting" do
+describe Ingreedy, "ingredient formatting" do
   it "strips preceding or trailing whitespace" do
     expect(Ingreedy.parse("1 cup flour ").ingredient).to eq("flour")
   end
