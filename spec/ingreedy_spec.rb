@@ -288,15 +288,20 @@ end
 
 describe Ingreedy, "custom dictionaries" do
   context "using Ingreedy.locale=" do
+    after do
+      Ingreedy.locale = nil
+    end
+
     it "parses correctly" do
-      result = Ingreedy::Parser.new(
-        "une pincee de sucre",
-        dictionary: Ingreedy::Dictionary.new(
-          numbers: { "une" => 1 },
-          prepositions: ["de"],
-          units: { dash: ["pincee"] },
-        )
-      ).parse
+      Ingreedy.dictionaries[:fr] = {
+        numbers: { "une" => 1 },
+        prepositions: ["de"],
+        units: { dash: ["pincee"] },
+      }
+
+      Ingreedy.locale = :fr
+
+      result = Ingreedy.parse("une pincee de sucre")
 
       expect(result.amount).to eq(1)
       expect(result.unit).to eq(:dash)
