@@ -310,12 +310,10 @@ describe Ingreedy, "custom dictionaries" do
   end
 
   context "using I18n.locale" do
-    before(:each) do
+    it "parses correctly" do
       Ingreedy.dictionaries[:de] = { units: { dash: ["prise"] } }
       stub_const "I18n", double("I18n", locale: :de)
-    end
 
-    it "parses correctly" do
       result = Ingreedy.parse "1 Prise Zucker"
 
       expect(result.amount).to eq(1)
@@ -325,15 +323,9 @@ describe Ingreedy, "custom dictionaries" do
   end
 
   context "unknown locale" do
-    before do
-      Ingreedy.locale = :da
-    end
-
-    after do
-      Ingreedy.locale = nil
-    end
-
     it "raises an informative exception" do
+      allow(Ingreedy).to receive(:locale).and_return(:da)
+
       expect do
         Ingreedy.parse "1 tsk salt"
       end.to raise_exception("No dictionary found for :da locale")
