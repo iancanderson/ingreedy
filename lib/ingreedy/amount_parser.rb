@@ -47,15 +47,11 @@ module Ingreedy
       word_digits.map { |d| stri(d) }.inject(:|) || any
     end
 
-    rule(:amount_unit_separator) do
-      whitespace | str("-")
-    end
-
     rule(:amount) do
       fraction |
         float.as(:float_amount) |
         integer.as(:integer_amount) |
-        word_digit.as(:word_integer_amount) >> amount_unit_separator
+        word_digit.as(:word_integer_amount) >> whitespace
     end
 
     root(:amount)
