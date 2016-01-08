@@ -5,6 +5,8 @@ require File.join(path, "ingreedy_parser")
 require File.join(path, "dictionary_collection")
 
 module Ingreedy
+  ParseFailed = Class.new(StandardError)
+
   def self.locale
     @locale ||= nil
   end
@@ -16,6 +18,8 @@ module Ingreedy
   def self.parse(query)
     parser = Parser.new(query)
     parser.parse
+  rescue Parslet::ParseFailed => e
+    fail ParseFailed.new(e.message), e.backtrace
   end
 
   def self.dictionaries

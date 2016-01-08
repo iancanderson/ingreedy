@@ -367,3 +367,11 @@ describe Ingreedy, "ingredient formatting" do
     expect(Ingreedy.parse("1 cup flour ").ingredient).to eq("flour")
   end
 end
+
+describe Ingreedy, "error handling" do
+  it "wraps Parslet exceptions in a custom exception" do
+    expect do
+      Ingreedy.parse("nonsense")
+    end.to raise_error Ingreedy::ParseFailed
+  end
+end
