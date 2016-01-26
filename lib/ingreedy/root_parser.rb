@@ -3,9 +3,13 @@ module Ingreedy
     rule(:range) do
       AmountParser.new.as(:amount) >>
         whitespace.maybe >>
-        str("-") >>
+        range_separator >>
         whitespace.maybe >>
         AmountParser.new.as(:amount_end)
+    end
+
+    rule(:range_separator) do
+      str("-") | str("~")
     end
 
     rule(:amount) do
