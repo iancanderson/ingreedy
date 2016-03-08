@@ -12,44 +12,42 @@ module Ingreedy
     end
 
     def rationalize
-      if @word
-        result = normalized_word
-      elsif @fraction
-        result = rationalized_fraction
-      elsif @integer
-        result = @integer
-      elsif @float
-        result = rationalized_float
+      if Ingreedy.preserve_amounts
+        (normalized_word || compound_fraction || @float || @integer)
+      else
+        (normalized_word || rationalized_fraction || rationalized_float || @integer).to_r
       end
-
-      result.to_r
     end
 
     private
 
     def normalized_word
+      return unless @word
       Ingreedy.dictionaries.current.numbers[@word.downcase]
     end
 
     def normalized_fraction
       @fraction.tap do |fraction|
-        vulgar_fractions.each do |char, amount|
+        Ingreedy.dictionaries.current.vulgar_fractions.each do |char, amount|
           fraction.gsub!(char, amount.to_s)
         end
       end
     end
 
-    def vulgar_fractions
-      Ingreedy.dictionaries.current.vulgar_fractions
-    end
-
     def rationalized_fraction
+      return unless @fraction
       result = normalized_fraction
-      result = result.to_r + @integer.to_i if @integer
+      result = result.to_r + @integer.to_i
       result
     end
 
+    def compound_fraction
+      return unless @fraction
+      "#{@integer} #{normalized_fraction}".strip
+    end
+
     def rationalized_float
+      return unless @float
       @float.tr(",", ".")
     end
   end
