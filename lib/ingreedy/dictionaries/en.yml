@@ -135,3 +135,7 @@
   ninety: 9
 :prepositions:
   - "of"
+:range_separators:
+  - "-"
+  - "~"
+  - "or"
