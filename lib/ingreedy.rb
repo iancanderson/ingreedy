@@ -7,12 +7,8 @@ require File.join(path, "dictionary_collection")
 module Ingreedy
   ParseFailed = Class.new(StandardError)
 
-  def self.locale
-    @locale ||= nil
-  end
-
-  def self.locale=(locale)
-    @locale = locale
+  class << self
+    attr_accessor :locale, :preserve_amounts
   end
 
   def self.parse(query)

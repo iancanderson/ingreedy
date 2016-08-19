@@ -41,6 +41,32 @@ describe Ingreedy, "amount parsing" do
   end
 end
 
+describe Ingreedy, "amount parsing preserving original value" do
+  around do |example|
+    Ingreedy.preserve_amounts = true
+    example.run
+    Ingreedy.preserve_amounts = false
+  end
+
+  {
+    "1 cup flour" => "1",
+    "2 cups flour" => "2",
+    "1 1/2 cups flour" => "1 1/2",
+    "¼ cups flour" => "1/4",
+    "1 ½ cups flour" => "1 1/2",
+    "1½ cups flour" => "1 1/2",
+    "1.0 cup flour" => "1.0",
+    "1.5 cups flour" => "1.5",
+    "1,5 cups flour" => "1,5",
+    "1/2 cups flour" => "1/2",
+    ".25 cups flour" => ".25",
+  }.each do |query, expected|
+    it "parses the correct amount" do
+      expect(Ingreedy.parse(query).amount).to eq(expected)
+    end
+  end
+end
+
 describe Ingreedy, "english units" do
   context "abbreviated" do
     {

@@ -30,6 +30,27 @@ print result.ingredient
   #=> "sucre"
 ```
 
+### Handling amounts
+
+By default, Ingreedy will convert all amounts to a rational number:
+
+```ruby
+result = Ingreedy.parse("1 1/2 cups flour")
+print result.amount
+  #=> 3/2
+```
+
+However, setting `Ingreedy.preverse_amounts = true`, will allow amounts
+to be detected and returned as originally input:
+
+```ruby
+Ingreedy.preserve_amounts = true
+
+result = Ingreedy.parse("1 1/2 cups flour")
+print result.amount
+  #=> 1 1/2
+```
+
 [Live demo](http://hangryingreedytest.herokuapp.com/)
 
 # Pieces of Flair
