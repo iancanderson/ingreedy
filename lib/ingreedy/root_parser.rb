@@ -90,8 +90,18 @@ module Ingreedy
         quantity
     end
 
+    rule(:imprecise) do
+      imprecise_amounts.map { |con| str(con) }.inject(:|).as(:imprecise_amount) >>
+      whitespace >>
+      any.repeat.as(:ingredient)
+    end
+
     rule(:ingredient_addition) do
-      standard_format | reverse_format
+      if imprecise_amounts.any?
+        imprecise | standard_format | reverse_format
+      else
+        standard_format | reverse_format
+      end
     end
 
     root :ingredient_addition
@@ -107,6 +117,10 @@ module Ingreedy
     private
 
     attr_reader :original_query
+
+    def imprecise_amounts
+      Ingreedy.dictionaries.current.imprecise_amounts
+    end
 
     def prepositions
       Ingreedy.dictionaries.current.prepositions

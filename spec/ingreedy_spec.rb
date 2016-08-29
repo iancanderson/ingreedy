@@ -9,6 +9,13 @@ describe Ingreedy, ".parse" do
     expect(result.unit).to eq(:pound)
     expect(result.ingredient).to eq("potatoes")
   end
+
+  it "parses imprecise amounts correctly" do
+    result = Ingreedy.parse("a few onions")
+
+    expect(result.amount).to eq("a few")
+    expect(result.ingredient).to eq("onions")
+  end
 end
 
 describe Ingreedy, "amount parsing" do

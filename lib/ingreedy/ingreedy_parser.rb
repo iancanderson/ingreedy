@@ -34,6 +34,10 @@ module Ingreedy
         rationalize(parslet[:amount_end]),
       ] if parslet[:amount_end]
 
+      if parslet[:imprecise_amount]
+        result.amount = parslet[:imprecise_amount].to_s
+      end
+
       result.container_amount = rationalize(parslet[:container_amount])
 
       result.unit = convert_unit_variation_to_canonical(
@@ -57,6 +61,7 @@ module Ingreedy
 
     def rationalize(amount)
       return unless amount
+
       integer = amount[:integer_amount]
       integer &&= integer.to_s
 

@@ -1,12 +1,14 @@
 module Ingreedy
   class Dictionary
     attr_reader :units, :numbers, :prepositions, :range_separators
+    attr_reader :imprecise_amounts
 
     def initialize(entries = {})
       @units = entries[:units] || raise("No units found in dictionary")
       @numbers = entries[:numbers] || {}
       @prepositions = entries[:prepositions] || []
       @range_separators = entries[:range_separators] || %w{- ~}
+      @imprecise_amounts = entries[:imprecise_amounts] || []
     end
 
     # https://en.wikipedia.org/wiki/Number_Forms
