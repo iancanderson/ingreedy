@@ -306,6 +306,14 @@ describe Ingreedy, "Given a range" do
     expect(result.unit).to eq(:tablespoon)
     expect(result.ingredient).to eq("salt")
   end
+
+  it "works with 'or'" do
+    result = Ingreedy.parse "1 or 2 tbsp salt"
+
+    expect(result.amount).to eq([1, 2])
+    expect(result.unit).to eq(:tablespoon)
+    expect(result.ingredient).to eq("salt")
+  end
 end
 
 describe Ingreedy, "parsing in language with no prepositions" do

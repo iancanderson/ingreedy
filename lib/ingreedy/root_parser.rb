@@ -9,7 +9,7 @@ module Ingreedy
     end
 
     rule(:range_separator) do
-      str("-") | str("~")
+      range_separators.map { |separator| str(separator) }.inject(:|)
     end
 
     rule(:amount) do
@@ -50,7 +50,7 @@ module Ingreedy
 
     rule(:preposition) do
       whitespace >>
-        prepositions.map { |con| str(con) }.inject(:|) >>
+        prepositions.map { |preposition| str(preposition) }.inject(:|) >>
         whitespace
     end
 
@@ -110,6 +110,10 @@ module Ingreedy
 
     def prepositions
       Ingreedy.dictionaries.current.prepositions
+    end
+
+    def range_separators
+      Ingreedy.dictionaries.current.range_separators
     end
 
     def unit_matches

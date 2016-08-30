@@ -13,10 +13,11 @@ print result.ingredient
 ### I18n and custom dictionaries
 
 ```ruby
-Ingreedy.dictionaries[:fr] = { 
-  units: { dash: ['pincée'] }, 
-  numbers: { 'une' => 1 }, 
-  prepositions: ['de'] 
+Ingreedy.dictionaries[:fr] = {
+  units: { dash: ['pincée'] },
+  numbers: { 'une' => 1 },
+  prepositions: ['de']
+  range_separators: ['ou']
 }
 
 Ingreedy.locale = :fr # Also automatically follows I18n.locale if available
