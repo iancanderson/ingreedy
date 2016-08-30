@@ -1,5 +1,7 @@
 module Ingreedy
   class RootParser < Parslet::Parser
+    include CaseInsensitiveParser
+
     rule(:range) do
       AmountParser.new.as(:amount) >>
         whitespace.maybe >>
@@ -91,7 +93,7 @@ module Ingreedy
     end
 
     rule(:imprecise) do
-      imprecise_amounts.map { |con| str(con) }.inject(:|).as(:imprecise_amount) >>
+      imprecise_amounts.map { |con| stri(con) }.inject(:|).as(:imprecise_amount) >>
       whitespace >>
       any.repeat.as(:ingredient)
     end

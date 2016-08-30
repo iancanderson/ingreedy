@@ -16,6 +16,13 @@ describe Ingreedy, ".parse" do
     expect(result.amount).to eq("a few")
     expect(result.ingredient).to eq("onions")
   end
+
+  it "parses imprecise amounts correctly regardless of case" do
+    result = Ingreedy.parse("A few onions")
+
+    expect(result.amount).to eq("A few")
+    expect(result.ingredient).to eq("onions")
+  end
 end
 
 describe Ingreedy, "amount parsing" do
