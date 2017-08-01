@@ -3,12 +3,12 @@ module Ingreedy
     attr_reader :units, :numbers, :prepositions, :range_separators
     attr_reader :imprecise_amounts
 
-    def initialize(entries = {})
-      @units = entries[:units] || raise("No units found in dictionary")
-      @numbers = entries[:numbers] || {}
-      @prepositions = entries[:prepositions] || []
-      @range_separators = entries[:range_separators] || %w{- ~}
-      @imprecise_amounts = entries[:imprecise_amounts] || []
+    def initialize(units:, numbers: {}, prepositions: [], range_separators: %w{- ~}, imprecise_amounts: [])
+      @units = units
+      @numbers = sort_by_length(numbers)
+      @prepositions = prepositions
+      @range_separators = range_separators
+      @imprecise_amounts = imprecise_amounts
     end
 
     # https://en.wikipedia.org/wiki/Number_Forms
@@ -34,5 +34,11 @@ module Ingreedy
         "\u215E" => "7/8",
       }
     end
+
+    private
+
+      def sort_by_length(hash)
+        hash.sort_by { |key, val| -key.length }.to_h
+      end
   end
 end

@@ -59,7 +59,7 @@ module Ingreedy
     private
 
     def word_digits
-      Ingreedy.dictionaries.current.numbers.keys.sort_by(&:length).reverse
+      Ingreedy.dictionaries.current.numbers.keys
     end
 
     def vulgar_fractions

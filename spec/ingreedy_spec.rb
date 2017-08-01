@@ -421,7 +421,7 @@ describe Ingreedy, "custom dictionaries" do
     it "raises an informative exception" do
       expect do
         Ingreedy.dictionaries[:da] = {}
-      end.to raise_exception("No units found in dictionary")
+      end.to raise_exception(ArgumentError)
     end
   end
 end
