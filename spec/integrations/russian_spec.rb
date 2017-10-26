@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe "Russian language" do
   before(:each) do
     Ingreedy.dictionaries[:ru] = { units: { piece: ["шт"] } }
