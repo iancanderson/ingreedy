@@ -23,7 +23,7 @@ module Ingreedy
 
     def normalized_word
       return unless @word
-      Ingreedy.dictionaries.current.numbers[@word.downcase]
+      Ingreedy.dictionaries.current.numbers[Unicode.downcase(@word)]
     end
 
     def normalized_fraction
