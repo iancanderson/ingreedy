@@ -19,8 +19,8 @@ Gem::Specification.new do |s|
 
   s.add_dependency "parslet", "~> 1.7.0", ">= 1.7.0"
 
-  s.add_development_dependency "rake", "~> 0.9", ">= 0.9"
-  s.add_development_dependency "rspec", "~> 3.3.0", ">= 3.3.0"
-  s.add_development_dependency "coveralls", "~> 0.7.0", ">= 0.7.0"
+  s.add_development_dependency "rake", "~> 13"
+  s.add_development_dependency "rspec", "~> 3.10"
+  s.add_development_dependency "coveralls_reborn", "~> 0.22"
   s.add_development_dependency "pry"
 end
