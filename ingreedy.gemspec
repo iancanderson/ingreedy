@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.files = `git ls-files`.split("\n")
   s.require_path = "lib"
 
-  s.add_dependency "parslet", "~> 1.7.0", ">= 1.7.0"
+  s.add_dependency "parslet", ">= 1.7.0", "< 3"
 
   s.add_development_dependency "rake", "~> 13"
   s.add_development_dependency "rspec", "~> 3.10"
