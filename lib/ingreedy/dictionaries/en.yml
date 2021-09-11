@@ -112,6 +112,17 @@
     - "can"
   :to_taste:
     - "to taste"
+  :bunch:
+    - "bunches"
+    - "bunch"
+  :clove:
+    - "cloves"
+    - "clove"
+  :bottle:
+    - "bottles"
+    - "bottle"
+  :knob:
+    - "knob"
 :numbers:
   a: 1
   an: 1
