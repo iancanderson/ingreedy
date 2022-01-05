@@ -401,6 +401,21 @@ describe Ingreedy, "custom dictionaries" do
     end
   end
 
+  context "using I18n.fallbacks" do
+    before(:each) do
+      Ingreedy.dictionaries[:"es-419"] = { units: { dash: ["chorro"] } }
+      stub_const "I18n", double("I18n", fallbacks: { :"es-AR" => [:"es-AR", :"es-419"] }, locale: :"es-AR")
+    end
+
+    it "parses correctly" do
+      result = Ingreedy.parse "1 Chorro Zucker"
+
+      expect(result.amount).to eq(1)
+      expect(result.unit).to eq(:dash)
+      expect(result.ingredient).to eq("Zucker")
+    end
+  end
+
   context "unknown locale" do
     before(:all) do
       Ingreedy.locale = :da
@@ -413,7 +428,7 @@ describe Ingreedy, "custom dictionaries" do
     it "raises an informative exception" do
       expect do
         Ingreedy.parse "1 tsk salt"
-      end.to raise_exception("No dictionary found for :da locale")
+      end.to raise_exception("No dictionary found for locales: [:da]")
     end
   end
 

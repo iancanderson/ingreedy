@@ -20,7 +20,7 @@ Ingreedy.dictionaries[:fr] = {
   range_separators: ['ou']
 }
 
-Ingreedy.locale = :fr # Also automatically follows I18n.locale if available
+Ingreedy.locale = :fr # Also automatically follows I18n.locale and I18n.fallbacks if available
 
 result = Ingreedy.parse('une pincée de sucre')
 print result.amount
